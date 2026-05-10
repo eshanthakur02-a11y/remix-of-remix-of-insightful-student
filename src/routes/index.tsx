@@ -69,6 +69,16 @@ function Dashboard() {
         </div>
       </div>
 
+      <div className="glass-card p-5 mt-4 animate-fade-up">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <div>
+            <h3 className="font-semibold">Class comparison · avg marks vs attendance</h3>
+            <p className="text-xs text-muted-foreground">Bars: average marks (%) per class · line: average attendance (%)</p>
+          </div>
+        </div>
+        <ClassComparison />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
         <div className="glass-card p-5 lg:col-span-2 animate-fade-up">
           <div className="flex items-center justify-between mb-2">
