@@ -27,7 +27,7 @@ export const Route = createFileRoute("/students/$regNo")({
 function StudentProfile() {
   const s = Route.useLoaderData();
   const rank = [...students].sort((a, b) => b.percentage - a.percentage).findIndex((x) => x.regNo === s.regNo) + 1;
-  const subjectData = Object.entries(s.marks).map(([k, v]) => ({ subject: k.charAt(0).toUpperCase() + k.slice(1), score: v }));
+  const subjectData: { subject: string; score: number }[] = Object.entries(s.marks).map(([k, v]) => ({ subject: k.charAt(0).toUpperCase() + k.slice(1), score: v as number }));
   const strengths = subjectData.filter((d) => d.score >= 75).map((d) => d.subject);
   const weaknesses = subjectData.filter((d) => d.score < 60).map((d) => d.subject);
 
