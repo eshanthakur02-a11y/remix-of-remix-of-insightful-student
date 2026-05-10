@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
+import { Avatar } from "@/components/Avatar";
 import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/students")({
@@ -85,7 +86,7 @@ function StudentsPage() {
                 <tr key={s.regNo} className="border-t border-border hover:bg-card/30 transition-colors">
                   <td className="px-4 py-3">
                     <Link to="/students/$regNo" params={{ regNo: s.regNo }} className="flex items-center gap-3 hover:text-primary">
-                      <img src={s.avatar} alt="" className="h-8 w-8 rounded-full border border-border bg-card" />
+                      <Avatar name={s.name} className="h-8 w-8" />
                       <span className="font-medium">{s.name}</span>
                     </Link>
                   </td>

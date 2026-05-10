@@ -8,6 +8,8 @@ import { AttendanceHeatmap } from "@/components/charts/AttendanceHeatmap";
 import { students, notifications } from "@/lib/mock-data";
 import { Users, CalendarCheck, Trophy, AlertTriangle, BookOpen, Sparkles, ArrowRight, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/Avatar";
+import { ClassComparison } from "@/components/charts/ClassComparison";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -67,6 +69,16 @@ function Dashboard() {
         </div>
       </div>
 
+      <div className="glass-card p-5 mt-4 animate-fade-up">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <div>
+            <h3 className="font-semibold">Class comparison · avg marks vs attendance</h3>
+            <p className="text-xs text-muted-foreground">Bars: average marks (%) per class · line: average attendance (%)</p>
+          </div>
+        </div>
+        <ClassComparison />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
         <div className="glass-card p-5 lg:col-span-2 animate-fade-up">
           <div className="flex items-center justify-between mb-2">
@@ -102,7 +114,7 @@ function Dashboard() {
                 className="flex items-center gap-3 py-3 hover:bg-card/40 -mx-2 px-2 rounded-lg transition-colors"
               >
                 <div className="w-6 text-sm text-muted-foreground tabular-nums">#{i + 1}</div>
-                <img src={s.avatar} alt={s.name} className="h-9 w-9 rounded-full bg-card border border-border" />
+                <Avatar name={s.name} className="h-9 w-9" />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium truncate">{s.name}</div>
                   <div className="text-xs text-muted-foreground">Class {s.className} · {s.regNo}</div>
