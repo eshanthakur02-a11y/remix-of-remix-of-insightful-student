@@ -8,6 +8,8 @@ import { AttendanceHeatmap } from "@/components/charts/AttendanceHeatmap";
 import { students, notifications } from "@/lib/mock-data";
 import { Users, CalendarCheck, Trophy, AlertTriangle, BookOpen, Sparkles, ArrowRight, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/Avatar";
+import { ClassComparison } from "@/components/charts/ClassComparison";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
