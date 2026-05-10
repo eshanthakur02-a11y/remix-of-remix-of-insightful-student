@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { aiInsights, students } from "@/lib/mock-data";
 import { Sparkles, AlertTriangle, TrendingDown, Lightbulb, Target } from "lucide-react";
+import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/insights")({
@@ -50,7 +51,7 @@ function Insights() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {atRisk.map((s) => (
             <div key={s.regNo} className="rounded-xl border border-border bg-card/40 p-4 flex items-center gap-3">
-              <img src={s.avatar} alt="" className="h-10 w-10 rounded-full border border-border bg-card" />
+              <Avatar name={s.name} className="h-10 w-10" />
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{s.name}</div>
                 <div className="text-xs text-muted-foreground">Class {s.className} · Att {s.attendance}% · {s.percentage}%</div>

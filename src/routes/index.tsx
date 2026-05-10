@@ -102,7 +102,7 @@ function Dashboard() {
                 className="flex items-center gap-3 py-3 hover:bg-card/40 -mx-2 px-2 rounded-lg transition-colors"
               >
                 <div className="w-6 text-sm text-muted-foreground tabular-nums">#{i + 1}</div>
-                <img src={s.avatar} alt={s.name} className="h-9 w-9 rounded-full bg-card border border-border" />
+                <Avatar name={s.name} className="h-9 w-9" />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium truncate">{s.name}</div>
                   <div className="text-xs text-muted-foreground">Class {s.className} · {s.regNo}</div>

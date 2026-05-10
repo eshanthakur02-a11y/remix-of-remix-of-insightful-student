@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Mail, Sparkles, Trophy, AlertTriangle, CalendarCheck } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
+import { Avatar } from "@/components/Avatar";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/students/$regNo")({
@@ -66,7 +67,7 @@ function StudentProfile() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="glass-card p-6 lg:col-span-1 animate-fade-up">
           <div className="flex items-center gap-4">
-            <img src={s.avatar} alt={s.name} className="h-16 w-16 rounded-2xl border border-border bg-card" />
+            <Avatar name={s.name} className="h-16 w-16 rounded-2xl text-base" />
             <div>
               <h2 className="text-xl font-semibold tracking-tight">{s.name}</h2>
               <p className="text-sm text-muted-foreground">{s.regNo} · Roll {s.rollNo}</p>
