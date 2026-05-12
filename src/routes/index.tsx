@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Download, Loader2 } from "lucide-react";
 
-const WEBHOOK_URL = "https://admin3114.app.n8n.cloud/webhook/10527fa1-676c-4d14-b36a-8b7d19adee53";
+const WEBHOOK_URL = "/api/n8n-fetch";
 import { StatCard } from "@/components/StatCard";
 import { AttendanceArea } from "@/components/charts/AttendanceArea";
 import { PerformanceLine } from "@/components/charts/PerformanceLine";
