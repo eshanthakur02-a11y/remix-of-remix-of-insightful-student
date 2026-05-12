@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const WEBHOOK_URL =
-  "https://admin3114.app.n8n.cloud/webhook/10527fa1-676c-4d14-b36a-8b7d19adee53";
+  "https://admin3114.app.n8n.cloud/webhook-test/10527fa1-676c-4d14-b36a-8b7d19adee53";
 
 export const Route = createFileRoute("/api/n8n-fetch")({
   server: {
