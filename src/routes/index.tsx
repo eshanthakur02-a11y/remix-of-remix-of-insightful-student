@@ -28,6 +28,26 @@ function Dashboard() {
   const lowAttendance = students.filter((s) => s.attendance < 75).length;
   const avgPercentage = Math.round(students.reduce((a, s) => a + s.percentage, 0) / total);
 
+  const [fetching, setFetching] = useState(false);
+  const [fetched, setFetched] = useState<unknown>(null);
+
+  async function handleFetchData() {
+    setFetching(true);
+    try {
+      const res = await fetch(WEBHOOK_URL, { method: "GET" });
+      const text = await res.text();
+      let parsed: unknown = text;
+      try { parsed = JSON.parse(text); } catch {}
+      if (!res.ok) throw new Error(`Webhook ${res.status}`);
+      setFetched(parsed);
+      toast.success("Data fetched from n8n webhook");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to fetch");
+    } finally {
+      setFetching(false);
+    }
+  }
+
   return (
     <AppShell>
       <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
@@ -39,11 +59,29 @@ function Dashboard() {
             Here's what's happening across your school today.
           </p>
         </div>
-        <Badge variant="outline" className="border-success/40 text-success bg-success/10">
-          <span className="h-1.5 w-1.5 rounded-full bg-success mr-2 animate-pulse" />
-          Synced from Google Sheets
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Button onClick={handleFetchData} disabled={fetching} size="sm" className="gap-2">
+            {fetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            Fetch Data
+          </Button>
+          <Badge variant="outline" className="border-success/40 text-success bg-success/10">
+            <span className="h-1.5 w-1.5 rounded-full bg-success mr-2 animate-pulse" />
+            Synced from Google Sheets
+          </Badge>
+        </div>
       </div>
+
+      {fetched !== null && (
+        <div className="glass-card p-5 mb-6 animate-fade-up">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold">Webhook response</h3>
+            <Badge variant="outline" className="text-xs">n8n</Badge>
+          </div>
+          <pre className="text-xs bg-card/40 rounded-lg p-3 overflow-auto max-h-80 text-muted-foreground">
+{typeof fetched === "string" ? fetched : JSON.stringify(fetched, null, 2)}
+          </pre>
+        </div>
+      )}
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
