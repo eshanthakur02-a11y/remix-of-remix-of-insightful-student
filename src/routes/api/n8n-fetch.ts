@@ -8,7 +8,7 @@ export const Route = createFileRoute("/api/n8n-fetch")({
     handlers: {
       GET: async () => {
         try {
-          const res = await fetch(WEBHOOK_URL, { method: "GET" });
+          const res = await fetch(WEBHOOK_URL, { method: "POST" });
           const text = await res.text();
           return new Response(text, {
             status: res.status,
