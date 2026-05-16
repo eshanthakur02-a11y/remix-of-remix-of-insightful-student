@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { students, type Student } from "./mock-data";
 
-type Overrides = Record<string, Partial<Student> & { marks?: Partial<Student["marks"]> }>;
+type StudentOverride = Partial<Omit<Student, "marks">> & { marks?: Partial<Student["marks"]> };
+type Overrides = Record<string, StudentOverride>;
 
 const KEY = "scholaris.student-overrides.v1";
 
