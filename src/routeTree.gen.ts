@@ -15,6 +15,7 @@ import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
 import { Route as ApiN8nFetchRouteImport } from './routes/api/n8n-fetch'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const StudentsRoute = StudentsRouteImport.update({
   id: '/students',
@@ -46,12 +47,18 @@ const ApiN8nFetchRoute = ApiN8nFetchRouteImport.update({
   path: '/api/n8n-fetch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/insights': typeof InsightsRoute
   '/notifications': typeof NotificationsRoute
   '/students': typeof StudentsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/students/$regNo': typeof StudentsRegNoRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsRoute
   '/notifications': typeof NotificationsRoute
   '/students': typeof StudentsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/students/$regNo': typeof StudentsRegNoRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/insights': typeof InsightsRoute
   '/notifications': typeof NotificationsRoute
   '/students': typeof StudentsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/students/$regNo': typeof StudentsRegNoRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/notifications'
     | '/students'
+    | '/api/chat'
     | '/api/n8n-fetch'
     | '/students/$regNo'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/notifications'
     | '/students'
+    | '/api/chat'
     | '/api/n8n-fetch'
     | '/students/$regNo'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/notifications'
     | '/students'
+    | '/api/chat'
     | '/api/n8n-fetch'
     | '/students/$regNo'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   InsightsRoute: typeof InsightsRoute
   NotificationsRoute: typeof NotificationsRoute
   StudentsRoute: typeof StudentsRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
   ApiN8nFetchRoute: typeof ApiN8nFetchRoute
 }
 
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiN8nFetchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -171,6 +191,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsRoute: InsightsRoute,
   NotificationsRoute: NotificationsRoute,
   StudentsRoute: StudentsRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
   ApiN8nFetchRoute: ApiN8nFetchRoute,
 }
 export const routeTree = rootRouteImport
