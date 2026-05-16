@@ -20,7 +20,7 @@ function gradeFor(p: number) {
   return p >= 90 ? "A+" : p >= 80 ? "A" : p >= 70 ? "B" : p >= 60 ? "C" : p >= 50 ? "D" : "F";
 }
 
-export function mergeStudent(s: Student, ov: Overrides[string] | undefined): Student {
+export function mergeStudent(s: Student, ov: StudentOverride | undefined): Student {
   if (!ov) return s;
   const marks = { ...s.marks, ...(ov.marks || {}) };
   const total = marks.english + marks.math + marks.science + marks.ssc + marks.python;
@@ -35,7 +35,7 @@ export function mergeStudent(s: Student, ov: Overrides[string] | undefined): Stu
   };
 }
 
-export function useStudent(regNo: string): [Student | undefined, (patch: Overrides[string]) => void] {
+export function useStudent(regNo: string): [Student | undefined, (patch: StudentOverride) => void] {
   const base = students.find((s) => s.regNo === regNo);
   const [ov, setOv] = useState<Overrides>(() => load());
 
@@ -51,7 +51,7 @@ export function useStudent(regNo: string): [Student | undefined, (patch: Overrid
 
   const merged = base ? mergeStudent(base, ov[regNo]) : undefined;
 
-  const update = (patch: Overrides[string]) => {
+  const update = (patch: StudentOverride) => {
     const next = { ...load() };
     const prev = next[regNo] || {};
     next[regNo] = {
