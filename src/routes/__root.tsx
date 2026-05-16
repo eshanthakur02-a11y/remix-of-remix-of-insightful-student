@@ -110,6 +110,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
+import { ChatBot } from "@/components/ChatBot";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -118,6 +119,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <Outlet />
+        <ChatBot />
         <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
