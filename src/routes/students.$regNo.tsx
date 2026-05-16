@@ -40,25 +40,24 @@ function StudentProfile() {
   const [s, update] = useStudent(regNo);
   const [editing, setEditing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [form, setForm] = useState({
+    name: s?.name ?? "",
+    className: s?.className ?? "",
+    rollNo: s?.rollNo ?? 0,
+    attendance: s?.attendance ?? 0,
+    parentName: s?.parentName ?? "",
+    parentEmail: s?.parentEmail ?? "",
+    guardian: s?.guardian ?? "",
+    remarks: s?.remarks ?? "",
+    english: s?.marks.english ?? 0,
+    math: s?.marks.math ?? 0,
+    science: s?.marks.science ?? 0,
+    ssc: s?.marks.ssc ?? 0,
+    python: s?.marks.python ?? 0,
+  });
 
   if (!s) return null;
   const rank = [...students].sort((a, b) => b.percentage - a.percentage).findIndex((x) => x.regNo === s.regNo) + 1;
-
-  const [form, setForm] = useState({
-    name: s.name,
-    className: s.className,
-    rollNo: s.rollNo,
-    attendance: s.attendance,
-    parentName: s.parentName,
-    parentEmail: s.parentEmail,
-    guardian: s.guardian,
-    remarks: s.remarks,
-    english: s.marks.english,
-    math: s.marks.math,
-    science: s.marks.science,
-    ssc: s.marks.ssc,
-    python: s.marks.python,
-  });
 
   function startEdit() {
     setForm({
