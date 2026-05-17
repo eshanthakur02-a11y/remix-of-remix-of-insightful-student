@@ -63,7 +63,7 @@ export function ChatBot() {
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-background">
             {messages.length === 0 && (
               <div className="text-sm text-muted-foreground space-y-2">
                 <p>Hi Anita — I'm your dashboard assistant. Try:</p>
