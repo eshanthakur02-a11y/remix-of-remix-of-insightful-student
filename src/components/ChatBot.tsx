@@ -52,8 +52,8 @@ export function ChatBot() {
 
       {/* Panel */}
       {open && (
-        <div className="fixed left-5 bottom-24 z-50 w-[360px] max-w-[calc(100vw-2.5rem)] h-[540px] max-h-[calc(100vh-7rem)] glass-card border border-border rounded-2xl flex flex-col overflow-hidden animate-fade-up">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card/40">
+        <div className="fixed left-5 bottom-24 z-50 w-[380px] max-w-[calc(100vw-2.5rem)] h-[560px] max-h-[calc(100vh-7rem)] bg-card border border-border rounded-2xl flex flex-col overflow-hidden animate-fade-up shadow-2xl">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
             <div className="h-9 w-9 rounded-xl flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
               <Sparkles className="h-4 w-4 text-primary-foreground" />
             </div>
