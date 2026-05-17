@@ -52,8 +52,8 @@ export function ChatBot() {
 
       {/* Panel */}
       {open && (
-        <div className="fixed left-5 bottom-24 z-50 w-[360px] max-w-[calc(100vw-2.5rem)] h-[540px] max-h-[calc(100vh-7rem)] glass-card border border-border rounded-2xl flex flex-col overflow-hidden animate-fade-up">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card/40">
+        <div className="fixed left-5 bottom-24 z-50 w-[380px] max-w-[calc(100vw-2.5rem)] h-[560px] max-h-[calc(100vh-7rem)] bg-card border border-border rounded-2xl flex flex-col overflow-hidden animate-fade-up shadow-2xl">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
             <div className="h-9 w-9 rounded-xl flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
               <Sparkles className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -63,7 +63,7 @@ export function ChatBot() {
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-background">
             {messages.length === 0 && (
               <div className="text-sm text-muted-foreground space-y-2">
                 <p>Hi Anita — I'm your dashboard assistant. Try:</p>
@@ -76,7 +76,7 @@ export function ChatBot() {
                     <li key={q}>
                       <button
                         onClick={() => sendMessage({ text: q })}
-                        className="text-left text-foreground hover:text-primary text-xs px-3 py-2 rounded-lg bg-card/60 border border-border w-full transition-colors"
+                        className="text-left text-foreground hover:text-primary hover:border-primary/40 text-xs px-3 py-2 rounded-lg bg-card border border-border w-full transition-colors"
                       >
                         {q}
                       </button>
@@ -107,7 +107,7 @@ export function ChatBot() {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="border-t border-border p-3 bg-card/40">
+          <form onSubmit={handleSubmit} className="border-t border-border p-3 bg-card">
             <div className="flex items-end gap-2">
               <textarea
                 ref={inputRef}
