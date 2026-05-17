@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const WEBHOOK_URL =
-  "https://admin3114.app.n8n.cloud/webhook/b3492712-c7b5-4b88-aa0d-72e9d3a4581a";
+  "https://admin3114.app.n8n.cloud/webhook-test/b3492712-c7b5-4b88-aa0d-72e9d3a4581a";
 
 export const Route = createFileRoute("/api/n8n-chat")({
   server: {
