@@ -76,7 +76,7 @@ export function ChatBot() {
                     <li key={q}>
                       <button
                         onClick={() => sendMessage({ text: q })}
-                        className="text-left text-foreground hover:text-primary text-xs px-3 py-2 rounded-lg bg-card/60 border border-border w-full transition-colors"
+                        className="text-left text-foreground hover:text-primary hover:border-primary/40 text-xs px-3 py-2 rounded-lg bg-card border border-border w-full transition-colors"
                       >
                         {q}
                       </button>
