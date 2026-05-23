@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentsRouteImport } from './routes/students'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
@@ -23,9 +25,19 @@ const StudentsRoute = StudentsRouteImport.update({
   path: '/students',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -62,7 +74,9 @@ const ApiChatRoute = ApiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/signup': typeof SignupRoute
   '/students': typeof StudentsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
@@ -72,7 +86,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/signup': typeof SignupRoute
   '/students': typeof StudentsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
@@ -83,7 +99,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/signup': typeof SignupRoute
   '/students': typeof StudentsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
@@ -95,7 +113,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/insights'
+    | '/login'
     | '/notifications'
+    | '/signup'
     | '/students'
     | '/api/chat'
     | '/api/n8n-chat'
@@ -105,7 +125,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/insights'
+    | '/login'
     | '/notifications'
+    | '/signup'
     | '/students'
     | '/api/chat'
     | '/api/n8n-chat'
@@ -115,7 +137,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/insights'
+    | '/login'
     | '/notifications'
+    | '/signup'
     | '/students'
     | '/api/chat'
     | '/api/n8n-chat'
@@ -126,7 +150,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InsightsRoute: typeof InsightsRoute
+  LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
+  SignupRoute: typeof SignupRoute
   StudentsRoute: typeof StudentsRouteWithChildren
   ApiChatRoute: typeof ApiChatRoute
   ApiN8nChatRoute: typeof ApiN8nChatRoute
@@ -142,11 +168,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -209,7 +249,9 @@ const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InsightsRoute: InsightsRoute,
+  LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
+  SignupRoute: SignupRoute,
   StudentsRoute: StudentsRouteWithChildren,
   ApiChatRoute: ApiChatRoute,
   ApiN8nChatRoute: ApiN8nChatRoute,
@@ -218,3 +260,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
