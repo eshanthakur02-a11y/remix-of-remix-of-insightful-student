@@ -1,36 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  LayoutDashboard, Bell, MessageSquare, Calendar, CalendarCheck, FileText,
-  Upload, ClipboardList, Award, CreditCard, BookOpen,
-} from "lucide-react";
-import { RoleShell, FeatureGrid, type NavItem } from "@/components/RoleShell";
+import { Link } from "@tanstack/react-router";
+import { RoleShell } from "@/components/RoleShell";
+import { studentNav } from "@/lib/nav";
 
-export const Route = createFileRoute("/student")({ component: StudentPage });
+export const Route = createFileRoute("/student")({ component: Page });
 
-const items = [
-  { title: "Dashboard", description: "Your day at a glance.", icon: LayoutDashboard },
-  { title: "Notifications", description: "Updates from school and teachers.", icon: Bell },
-  { title: "Chat with Teachers", description: "Ask questions and get help.", icon: MessageSquare },
-  { title: "Timetable", description: "View your weekly schedule.", icon: Calendar },
-  { title: "Check Attendance", description: "Track your attendance percentage.", icon: CalendarCheck },
-  { title: "View Homework", description: "See all assigned homework.", icon: FileText },
-  { title: "Submit Assignments", description: "Upload completed work.", icon: Upload },
-  { title: "Exam Schedule", description: "See upcoming exams and venues.", icon: ClipboardList },
-  { title: "Check Results", description: "Results and downloadable report cards.", icon: Award },
-  { title: "Pay Fees Online", description: "Pay term fees securely online.", icon: CreditCard },
-  { title: "Notes & Study Material", description: "Download class notes and resources.", icon: BookOpen },
-];
-
-const nav: NavItem[] = items.map((i) => ({ to: "/student", label: i.title, icon: i.icon }));
-
-function StudentPage() {
+function Page() {
   return (
-    <RoleShell role="student" navItems={nav}>
+    <RoleShell role="student" navItems={studentNav}>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Student Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Everything you need to learn and stay on track.</p>
+        <p className="text-sm text-muted-foreground mt-1">Your timetable, results, fees and more.</p>
       </div>
-      <FeatureGrid items={items} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {studentNav.filter((n) => n.to !== "/student").map(({ to, label, icon: Icon }) => (
+          <Link key={to} to={to} className="glass-card p-5 hover:border-primary/40 transition-colors">
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "var(--gradient-primary)" }}>
+              <Icon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <h3 className="font-semibold">{label}</h3>
+          </Link>
+        ))}
+      </div>
     </RoleShell>
   );
 }
