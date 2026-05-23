@@ -9,20 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransportRouteImport } from './routes/transport'
+import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as StudentsRouteImport } from './routes/students'
+import { Route as StudentRouteImport } from './routes/student'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountantRouteImport } from './routes/accountant'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
 import { Route as ApiN8nFetchRouteImport } from './routes/api/n8n-fetch'
 import { Route as ApiN8nChatRouteImport } from './routes/api/n8n-chat'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const TransportRoute = TransportRouteImport.update({
+  id: '/transport',
+  path: '/transport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeacherRoute = TeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentsRoute = StudentsRouteImport.update({
   id: '/students',
   path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentRoute = StudentRouteImport.update({
+  id: '/student',
+  path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -43,6 +63,16 @@ const LoginRoute = LoginRouteImport.update({
 const InsightsRoute = InsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountantRoute = AccountantRouteImport.update({
+  id: '/accountant',
+  path: '/accountant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,11 +103,16 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accountant': typeof AccountantRoute
+  '/admin': typeof AdminRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/signup': typeof SignupRoute
+  '/student': typeof StudentRoute
   '/students': typeof StudentsRouteWithChildren
+  '/teacher': typeof TeacherRoute
+  '/transport': typeof TransportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -85,11 +120,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accountant': typeof AccountantRoute
+  '/admin': typeof AdminRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/signup': typeof SignupRoute
+  '/student': typeof StudentRoute
   '/students': typeof StudentsRouteWithChildren
+  '/teacher': typeof TeacherRoute
+  '/transport': typeof TransportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -98,11 +138,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accountant': typeof AccountantRoute
+  '/admin': typeof AdminRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/signup': typeof SignupRoute
+  '/student': typeof StudentRoute
   '/students': typeof StudentsRouteWithChildren
+  '/teacher': typeof TeacherRoute
+  '/transport': typeof TransportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -112,11 +157,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/accountant'
+    | '/admin'
     | '/insights'
     | '/login'
     | '/notifications'
     | '/signup'
+    | '/student'
     | '/students'
+    | '/teacher'
+    | '/transport'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -124,11 +174,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/accountant'
+    | '/admin'
     | '/insights'
     | '/login'
     | '/notifications'
     | '/signup'
+    | '/student'
     | '/students'
+    | '/teacher'
+    | '/transport'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -136,11 +191,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/accountant'
+    | '/admin'
     | '/insights'
     | '/login'
     | '/notifications'
     | '/signup'
+    | '/student'
     | '/students'
+    | '/teacher'
+    | '/transport'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -149,11 +209,16 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountantRoute: typeof AccountantRoute
+  AdminRoute: typeof AdminRoute
   InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   SignupRoute: typeof SignupRoute
+  StudentRoute: typeof StudentRoute
   StudentsRoute: typeof StudentsRouteWithChildren
+  TeacherRoute: typeof TeacherRoute
+  TransportRoute: typeof TransportRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiN8nChatRoute: typeof ApiN8nChatRoute
   ApiN8nFetchRoute: typeof ApiN8nFetchRoute
@@ -161,11 +226,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transport': {
+      id: '/transport'
+      path: '/transport'
+      fullPath: '/transport'
+      preLoaderRoute: typeof TransportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/students': {
       id: '/students'
       path: '/students'
       fullPath: '/students'
       preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student': {
+      id: '/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -194,6 +280,20 @@ declare module '@tanstack/react-router' {
       path: '/insights'
       fullPath: '/insights'
       preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accountant': {
+      id: '/accountant'
+      path: '/accountant'
+      fullPath: '/accountant'
+      preLoaderRoute: typeof AccountantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -248,11 +348,16 @@ const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountantRoute: AccountantRoute,
+  AdminRoute: AdminRoute,
   InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   SignupRoute: SignupRoute,
+  StudentRoute: StudentRoute,
   StudentsRoute: StudentsRouteWithChildren,
+  TeacherRoute: TeacherRoute,
+  TransportRoute: TransportRoute,
   ApiChatRoute: ApiChatRoute,
   ApiN8nChatRoute: ApiN8nChatRoute,
   ApiN8nFetchRoute: ApiN8nFetchRoute,
