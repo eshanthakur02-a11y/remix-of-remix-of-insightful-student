@@ -17,7 +17,8 @@ export type Field = {
   required?: boolean;
 };
 
-export type Column<T> = { key: keyof T | string; label: string; render?: (row: T) => React.ReactNode };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Column<T = any> = { key: keyof T | string; label: string; render?: (row: any) => React.ReactNode };
 
 export function CrudTable<T extends { id: string }>({
   title,
