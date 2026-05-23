@@ -18,7 +18,10 @@ function extractReply(data: unknown): string {
   return String(data ?? "");
 }
 
+import { useAuth } from "@/lib/auth";
+
 export function ChatBot() {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -33,6 +36,9 @@ export function ChatBot() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open, loading]);
+
+  if (!user) return null;
+
 
   async function send(text: string) {
     const trimmed = text.trim();
