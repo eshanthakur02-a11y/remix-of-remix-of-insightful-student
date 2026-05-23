@@ -1,39 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  LayoutDashboard, Bell, School, BookOpen, GraduationCap, Users,
-  UserCheck, Calendar, Wallet, ClipboardList, Bus, FileBarChart, Send, ShieldCheck,
-} from "lucide-react";
-import { RoleShell, FeatureGrid, type NavItem } from "@/components/RoleShell";
+import { Link } from "@tanstack/react-router";
+import { RoleShell } from "@/components/RoleShell";
+import { adminNav } from "@/lib/nav";
 
 export const Route = createFileRoute("/admin")({ component: AdminPage });
 
-const items = [
-  { title: "Dashboard", description: "Overview of school activity and KPIs.", icon: LayoutDashboard },
-  { title: "Notifications", description: "Upload student documents and broadcast notices.", icon: Bell },
-  { title: "Classes & Sections", description: "Add classes and sections by grade.", icon: School },
-  { title: "Subjects", description: "Manage subjects assigned to each class.", icon: BookOpen },
-  { title: "Teachers", description: "Add and manage teacher profiles.", icon: GraduationCap },
-  { title: "Students", description: "Add and manage student enrollments.", icon: Users },
-  { title: "Assign Teachers", description: "Map teachers to classes and subjects.", icon: UserCheck },
-  { title: "Timetable", description: "Create and publish weekly timetables.", icon: Calendar },
-  { title: "Fee Structure", description: "Define fee plans by class and term.", icon: Wallet },
-  { title: "Exams", description: "Schedule exams and publish syllabi.", icon: ClipboardList },
-  { title: "Transport", description: "Routes, buses, drivers, and assignments.", icon: Bus },
-  { title: "Reports", description: "Generate academic and finance reports.", icon: FileBarChart },
-  { title: "Send Notifications", description: "Push SMS/email/app alerts to stakeholders.", icon: Send },
-  { title: "Monitoring & Security", description: "Audit logs, roles, and access control.", icon: ShieldCheck },
-];
-
-const nav: NavItem[] = items.map((i) => ({ to: "/admin", label: i.title, icon: i.icon }));
-
 function AdminPage() {
   return (
-    <RoleShell role="admin" navItems={nav}>
+    <RoleShell role="admin" navItems={adminNav}>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Admin Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Manage the entire school — every workflow at a glance.</p>
+        <p className="text-sm text-muted-foreground mt-1">Manage the entire school — pick a module below.</p>
       </div>
-      <FeatureGrid items={items} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {adminNav.filter((n) => n.to !== "/admin").map(({ to, label, icon: Icon }) => (
+          <Link key={to} to={to} className="glass-card p-5 hover:border-primary/40 transition-colors group">
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "var(--gradient-primary)" }}>
+              <Icon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <h3 className="font-semibold mb-1">{label}</h3>
+            <p className="text-xs text-muted-foreground">Open module →</p>
+          </Link>
+        ))}
+      </div>
     </RoleShell>
   );
 }

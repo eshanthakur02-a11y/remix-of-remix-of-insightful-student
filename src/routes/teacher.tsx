@@ -1,36 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  LayoutDashboard, Bell, BookOpen, Wallet, CalendarCheck, FileText,
-  PenLine, ClipboardList, TrendingUp, MessageSquare, PlaneTakeoff,
-} from "lucide-react";
-import { RoleShell, FeatureGrid, type NavItem } from "@/components/RoleShell";
+import { Link } from "@tanstack/react-router";
+import { RoleShell } from "@/components/RoleShell";
+import { teacherNav } from "@/lib/nav";
 
-export const Route = createFileRoute("/teacher")({ component: TeacherPage });
+export const Route = createFileRoute("/teacher")({ component: Page });
 
-const items = [
-  { title: "Dashboard", description: "Today's classes, tasks, and reminders.", icon: LayoutDashboard },
-  { title: "Notifications", description: "Announcements from admin and parents.", icon: Bell },
-  { title: "My Classes & Subjects", description: "View assigned classes and subjects.", icon: BookOpen },
-  { title: "Salary Details", description: "Monthly salary slips and history.", icon: Wallet },
-  { title: "Take Attendance", description: "Mark daily attendance per class.", icon: CalendarCheck },
-  { title: "Upload Homework", description: "Share homework and assignments.", icon: FileText },
-  { title: "Conduct Tests", description: "Create and run online/offline tests.", icon: PenLine },
-  { title: "Enter Marks", description: "Record exam and test scores.", icon: ClipboardList },
-  { title: "Student Performance", description: "Generate performance reports.", icon: TrendingUp },
-  { title: "Send Remarks", description: "Send parent remarks and feedback.", icon: MessageSquare },
-  { title: "Apply Leave", description: "Submit leave requests to admin.", icon: PlaneTakeoff },
-];
-
-const nav: NavItem[] = items.map((i) => ({ to: "/teacher", label: i.title, icon: i.icon }));
-
-function TeacherPage() {
+function Page() {
   return (
-    <RoleShell role="teacher" navItems={nav}>
+    <RoleShell role="teacher" navItems={teacherNav}>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Teacher Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Your daily academic activities in one place.</p>
+        <p className="text-sm text-muted-foreground mt-1">Mark attendance, enter results, view timetable.</p>
       </div>
-      <FeatureGrid items={items} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {teacherNav.filter((n) => n.to !== "/teacher").map(({ to, label, icon: Icon }) => (
+          <Link key={to} to={to} className="glass-card p-5 hover:border-primary/40 transition-colors">
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "var(--gradient-primary)" }}>
+              <Icon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <h3 className="font-semibold">{label}</h3>
+          </Link>
+        ))}
+      </div>
     </RoleShell>
   );
 }
