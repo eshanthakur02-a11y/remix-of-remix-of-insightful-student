@@ -18,13 +18,19 @@ function extractReply(data: unknown): string {
   return String(data ?? "");
 }
 
+import { useAuth } from "@/lib/auth";
+
 export function ChatBot() {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  if (!user) return null;
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
