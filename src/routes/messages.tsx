@@ -14,7 +14,7 @@ export const Route = createFileRoute("/messages")({ component: Page });
 function Page() {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
-  const [people, setPeople] = useState<{ id: string; full_name: string }[]>([]);
+  const [people, setPeople] = useState<{ id: string; full_name: string | null }[]>([]);
   const [selected, setSelected] = useState<string>("");
   const [messages, setMessages] = useState<{ id: string; sender_id: string; recipient_id: string; body: string; created_at: string }[]>([]);
   const [body, setBody] = useState("");
