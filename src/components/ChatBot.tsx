@@ -29,9 +29,6 @@ export function ChatBot() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  if (!user) return null;
-
-
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
@@ -39,6 +36,9 @@ export function ChatBot() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open, loading]);
+
+  if (!user) return null;
+
 
   async function send(text: string) {
     const trimmed = text.trim();
