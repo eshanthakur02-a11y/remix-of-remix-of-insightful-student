@@ -1,9 +1,15 @@
 import {
   LayoutDashboard, School, BookOpen, GraduationCap, Users, Calendar,
   Wallet, ClipboardList, Bus, Megaphone, UserCheck, MessageSquare,
-  Receipt, FileBarChart,
+  Receipt, FileBarChart, Building2, Heart,
 } from "lucide-react";
 import type { NavItem } from "@/components/RoleShell";
+
+export const superAdminNav: NavItem[] = [
+  { to: "/superadmin", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/superadmin/schools", label: "Schools", icon: Building2 },
+  { to: "/superadmin/admins", label: "School Admins", icon: GraduationCap },
+];
 
 export const adminNav: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -35,6 +41,12 @@ export const studentNav: NavItem[] = [
   { to: "/student/results", label: "My Results", icon: ClipboardList },
   { to: "/student/fees", label: "My Fees", icon: Wallet },
   { to: "/student/transport", label: "Transport", icon: Bus },
+  { to: "/messages", label: "Messages", icon: MessageSquare },
+];
+
+export const parentNav: NavItem[] = [
+  { to: "/parent", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/parent/children", label: "My Children", icon: Heart },
   { to: "/messages", label: "Messages", icon: MessageSquare },
 ];
 
