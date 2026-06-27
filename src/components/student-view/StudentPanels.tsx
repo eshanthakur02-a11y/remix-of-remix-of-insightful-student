@@ -106,7 +106,7 @@ export function TimetablePanel({ studentId }: { studentId: string }) {
         <ul className="divide-y divide-border/60 text-sm">
           {rows.slice(0, 6).map((r: any, i: number) => (
             <li key={i} className="py-2 flex items-center justify-between">
-              <div><div>{r.subjects?.name ?? "—"}</div><div className="text-xs text-muted-foreground">{r.day} · P{r.period}</div></div>
+              <div><div>{r.subjects?.name ?? "—"}</div><div className="text-xs text-muted-foreground">{["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][r.day_of_week % 7] ?? "—"} · {r.start_time?.slice(0,5)}</div></div>
               <div className="text-xs text-muted-foreground">{r.teachers?.full_name ?? "—"}</div>
             </li>
           ))}
