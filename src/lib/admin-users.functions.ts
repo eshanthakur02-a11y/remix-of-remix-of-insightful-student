@@ -306,6 +306,9 @@ export const assignTeacher = createServerFn({ method: "POST" })
       school_id: schoolId,
     });
     if (error) throw error;
+    await audit(context, "teacher.assigned", "teacher", data.teacher_id, {
+      subject_id: data.subject_id, class_id: data.class_id, section_id: data.section_id,
+    }, schoolId);
     return { ok: true };
   });
 
