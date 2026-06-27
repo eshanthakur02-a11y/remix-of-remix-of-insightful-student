@@ -58,11 +58,16 @@ function LoginPage() {
         return toast.error("Your account has been suspended. Contact your administrator.");
       }
       if (sid) {
-        const { data: sch } = await supabase.from("schools").select("status").eq("id", sid).maybeSingle();
+        const { data: sch } = await supabase.from("schools").select("status,features").eq("id", sid).maybeSingle();
         if (sch?.status === "suspended") {
           await supabase.auth.signOut();
           setSubmitting(false);
           return toast.error("Your school has been suspended. Contact your administrator.");
+        }
+        if (r === "student" && (sch?.features as { student_login?: boolean } | null)?.student_login === false) {
+          await supabase.auth.signOut();
+          setSubmitting(false);
+          return toast.error("Student sign-in is disabled by your school. Please ask a parent or teacher.");
         }
       }
     }

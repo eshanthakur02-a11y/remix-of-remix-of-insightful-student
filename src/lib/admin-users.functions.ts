@@ -30,6 +30,23 @@ async function assertSuperAdmin(context: any) {
   if (!isSuper) throw new Error("Forbidden: super_admin only");
 }
 
+// Best-effort audit log; never throws (auditing must never break a write).
+async function audit(
+  context: any,
+  action: string,
+  entity: string,
+  entity_id: string | null,
+  meta: Record<string, unknown> = {},
+  school_id: string | null = null,
+) {
+  try {
+    await context.supabase.rpc("log_audit", {
+      _action: action, _entity: entity, _entity_id: entity_id,
+      _school_id: school_id, _meta: meta,
+    });
+  } catch { /* swallow */ }
+}
+
 // ---------- Super Admin: create a School Admin (invite via email) ------------
 export const createSchoolAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -48,6 +65,7 @@ export const createSchoolAdmin = createServerFn({ method: "POST" })
       redirectTo: `${process.env.PUBLIC_SITE_URL ?? ""}/reset-password`,
     });
     if (error) throw error;
+    await audit(context, "school_admin.invited", "user", created.user?.id ?? null, { email: data.email }, data.school_id);
     return { id: created.user?.id, invited: true };
   });
 
@@ -84,6 +102,7 @@ export const createStaffUser = createServerFn({ method: "POST" })
         employee_no: data.employee_no ?? null,
       });
     }
+    await audit(context, `${data.role}.invited`, "user", userId ?? null, { email: data.email, role: data.role });
     return { id: userId, invited: true };
   });
 
@@ -194,6 +213,11 @@ export const createStudentWithParent = createServerFn({ method: "POST" })
       .insert({ parent_id: parentId, student_id: studentRow.id, relationship: data.relationship ?? null });
     if (linkErr && !linkErr.message.includes("duplicate")) throw linkErr;
 
+    await audit(context, "student.created", "student", studentRow.id, {
+      admission_no: data.admission_no, parent_email: data.parent_email,
+    }, schoolId);
+    await audit(context, "parent.linked", "parent", parentId, { student_id: studentRow.id }, schoolId);
+
     return {
       studentId: studentRow.id,
       parentId,
@@ -232,6 +256,7 @@ export const setSchoolStatus = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("schools").update({ status: data.status }).eq("id", data.school_id);
     if (error) throw error;
+    await audit(context, data.status === "suspended" ? "school.suspended" : "school.activated", "school", data.school_id, {}, data.school_id);
     return { ok: true };
   });
 
@@ -246,6 +271,7 @@ export const setStudentLoginEnabled = createServerFn({ method: "POST" })
     const features = { ...((sch?.features as any) ?? {}), student_login: data.enabled };
     const { error } = await supabaseAdmin.from("schools").update({ features }).eq("id", data.school_id);
     if (error) throw error;
+    await audit(context, "school.student_login_toggled", "school", data.school_id, { enabled: data.enabled }, data.school_id);
     return { ok: true };
   });
 
@@ -280,6 +306,9 @@ export const assignTeacher = createServerFn({ method: "POST" })
       school_id: schoolId,
     });
     if (error) throw error;
+    await audit(context, "teacher.assigned", "teacher", data.teacher_id, {
+      subject_id: data.subject_id, class_id: data.class_id, section_id: data.section_id,
+    }, schoolId);
     return { ok: true };
   });
 
@@ -345,5 +374,138 @@ export const deleteSectionSafe = createServerFn({ method: "POST" })
     await assertSchoolAdmin(context);
     const { error } = await context.supabase.rpc("delete_section_if_unreferenced", { _id: data.id });
     if (error) throw error;
+    return { ok: true };
+  });
+
+// ---------- Subjects (school_admin) ----------------------------------------
+export const createSubject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ name: z.string().trim().min(1).max(80), code: z.string().trim().max(20).optional().nullable() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: dupe } = await supabaseAdmin
+      .from("subjects").select("id").eq("school_id", schoolId).eq("status", "active").ilike("name", data.name).maybeSingle();
+    if (dupe) throw new Error("A subject with this name already exists.");
+    const { data: row, error } = await supabaseAdmin
+      .from("subjects").insert({ school_id: schoolId, name: data.name, code: data.code ?? null }).select("id").single();
+    if (error) throw error;
+    await audit(context, "subject.created", "subject", row.id, { name: data.name }, schoolId);
+    return { id: row.id };
+  });
+
+export const updateSubject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid(), name: z.string().trim().min(1).max(80), code: z.string().trim().max(20).optional().nullable() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("subjects").select("school_id").eq("id", data.id).single();
+    if (row?.school_id !== schoolId) throw new Error("Forbidden");
+    const { error } = await supabaseAdmin.from("subjects").update({ name: data.name, code: data.code ?? null }).eq("id", data.id);
+    if (error) throw error;
+    await audit(context, "subject.updated", "subject", data.id, { name: data.name }, schoolId);
+    return { ok: true };
+  });
+
+export const setSubjectStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid(), status: z.enum(["active", "archived"]) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("subjects").select("school_id").eq("id", data.id).single();
+    if (row?.school_id !== schoolId) throw new Error("Forbidden");
+    const { error } = await supabaseAdmin.from("subjects").update({ status: data.status }).eq("id", data.id);
+    if (error) throw error;
+    await audit(context, data.status === "archived" ? "subject.archived" : "subject.restored", "subject", data.id, {}, schoolId);
+    return { ok: true };
+  });
+
+export const deleteSubjectSafe = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("subjects").select("school_id").eq("id", data.id).single();
+    if (row?.school_id !== schoolId) throw new Error("Forbidden");
+    // safe delete: block if referenced in teacher_assignments / exam_results / timetable
+    const [{ count: a }, { count: e2 }, { count: t2 }] = await Promise.all([
+      supabaseAdmin.from("teacher_assignments").select("id", { count: "exact", head: true }).eq("subject_id", data.id),
+      supabaseAdmin.from("exam_results").select("id", { count: "exact", head: true }).eq("subject_id", data.id),
+      supabaseAdmin.from("timetable").select("id", { count: "exact", head: true }).eq("subject_id", data.id),
+    ]);
+    if ((a ?? 0) + (e2 ?? 0) + (t2 ?? 0) > 0) {
+      throw new Error("Cannot delete: subject is referenced by assignments, results, or timetable. Archive it instead.");
+    }
+    const { error } = await supabaseAdmin.from("subjects").delete().eq("id", data.id);
+    if (error) throw error;
+    await audit(context, "subject.deleted", "subject", data.id, {}, schoolId);
+    return { ok: true };
+  });
+
+// ---------- Academic Sessions (school_admin) -------------------------------
+export const createSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({
+    name: z.string().trim().min(1).max(60),
+    start_date: z.string(), end_date: z.string(),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin.from("academic_sessions")
+      .insert({ school_id: schoolId, name: data.name, start_date: data.start_date, end_date: data.end_date })
+      .select("id").single();
+    if (error) throw error;
+    await audit(context, "session.created", "session", row.id, { name: data.name }, schoolId);
+    return { id: row.id };
+  });
+
+export const updateSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({
+    id: z.string().uuid(),
+    name: z.string().trim().min(1).max(60),
+    start_date: z.string(), end_date: z.string(),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("academic_sessions").select("school_id").eq("id", data.id).single();
+    if (row?.school_id !== schoolId) throw new Error("Forbidden");
+    const { error } = await supabaseAdmin.from("academic_sessions")
+      .update({ name: data.name, start_date: data.start_date, end_date: data.end_date }).eq("id", data.id);
+    if (error) throw error;
+    await audit(context, "session.updated", "session", data.id, { name: data.name }, schoolId);
+    return { ok: true };
+  });
+
+export const activateSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { error } = await context.supabase.rpc("set_current_session", { _session_id: data.id });
+    if (error) throw error;
+    await audit(context, "session.activated", "session", data.id, {}, schoolId);
+    return { ok: true };
+  });
+
+export const setSessionStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid(), status: z.enum(["active", "archived", "closed"]) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const schoolId = await assertSchoolAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("academic_sessions").select("school_id").eq("id", data.id).single();
+    if (row?.school_id !== schoolId) throw new Error("Forbidden");
+    const patch = data.status === "active"
+      ? { status: data.status }
+      : { status: data.status, is_current: false };
+    const { error } = await supabaseAdmin.from("academic_sessions").update(patch).eq("id", data.id);
+    if (error) throw error;
+    await audit(context, `session.${data.status}`, "session", data.id, {}, schoolId);
     return { ok: true };
   });

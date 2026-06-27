@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, School, BookOpen, GraduationCap, Users, Calendar,
   Wallet, ClipboardList, Bus, Megaphone, UserCheck, MessageSquare,
-  Receipt, FileBarChart, Building2, Heart,
+  Receipt, FileBarChart, Building2, Heart, CalendarRange,
 } from "lucide-react";
 import type { NavItem } from "@/components/RoleShell";
 
@@ -13,6 +13,7 @@ export const superAdminNav: NavItem[] = [
 
 export const adminNav: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/admin/sessions", label: "Academic Sessions", icon: CalendarRange },
   { to: "/admin/classes", label: "Classes & Sections", icon: School },
   { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
   { to: "/admin/teachers", label: "Teachers", icon: GraduationCap },

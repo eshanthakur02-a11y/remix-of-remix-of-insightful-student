@@ -773,6 +773,7 @@ export type Database = {
           id: string
           name: string
           school_id: string | null
+          status: string
         }
         Insert: {
           code?: string | null
@@ -780,6 +781,7 @@ export type Database = {
           id?: string
           name: string
           school_id?: string | null
+          status?: string
         }
         Update: {
           code?: string | null
@@ -787,6 +789,7 @@ export type Database = {
           id?: string
           name?: string
           school_id?: string | null
+          status?: string
         }
         Relationships: [
           {
@@ -1113,6 +1116,16 @@ export type Database = {
     Functions: {
       auth_role: { Args: never; Returns: string }
       auth_school_id: { Args: never; Returns: string }
+      create_notification: {
+        Args: {
+          _body?: string
+          _kind: string
+          _school_id?: string
+          _title: string
+          _user_id: string
+        }
+        Returns: string
+      }
       delete_class_if_unreferenced: {
         Args: { _id: string }
         Returns: undefined
@@ -1130,6 +1143,17 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_audit: {
+        Args: {
+          _action: string
+          _entity: string
+          _entity_id?: string
+          _meta?: Json
+          _school_id?: string
+        }
+        Returns: string
+      }
+      mark_all_notifications_read: { Args: never; Returns: number }
       parent_has_student: {
         Args: { _student_id: string; _user_id: string }
         Returns: boolean
@@ -1138,6 +1162,7 @@ export type Database = {
         Args: { _key: string; _school_id: string }
         Returns: boolean
       }
+      set_current_session: { Args: { _session_id: string }; Returns: undefined }
     }
     Enums: {
       app_role:
