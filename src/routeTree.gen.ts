@@ -51,15 +51,23 @@ import { Route as ParentChildrenRouteImport } from './routes/parent.children'
 import { Route as ApiN8nFetchRouteImport } from './routes/api/n8n-fetch'
 import { Route as ApiN8nChatRouteImport } from './routes/api/n8n-chat'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTransportRouteImport } from './routes/admin.transport'
 import { Route as AdminTimetableRouteImport } from './routes/admin.timetable'
 import { Route as AdminTeachersRouteImport } from './routes/admin.teachers'
 import { Route as AdminSubjectsRouteImport } from './routes/admin.subjects'
 import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSessionsRouteImport } from './routes/admin.sessions'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminParentsRouteImport } from './routes/admin.parents'
+import { Route as AdminLibraryRouteImport } from './routes/admin.library'
+import { Route as AdminHomeworkRouteImport } from './routes/admin.homework'
 import { Route as AdminFeesRouteImport } from './routes/admin.fees'
 import { Route as AdminExamsRouteImport } from './routes/admin.exams'
 import { Route as AdminClassesRouteImport } from './routes/admin.classes'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as AdminAttendanceRouteImport } from './routes/admin.attendance'
 import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AccountantReportsRouteImport } from './routes/accountant.reports'
@@ -276,6 +284,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminTransportRoute = AdminTransportRouteImport.update({
   id: '/transport',
   path: '/transport',
@@ -301,9 +314,34 @@ const AdminStudentsRoute = AdminStudentsRouteImport.update({
   path: '/students',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSessionsRoute = AdminSessionsRouteImport.update({
   id: '/sessions',
   path: '/sessions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminParentsRoute = AdminParentsRouteImport.update({
+  id: '/parents',
+  path: '/parents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLibraryRoute = AdminLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHomeworkRoute = AdminHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminFeesRoute = AdminFeesRouteImport.update({
@@ -319,6 +357,16 @@ const AdminExamsRoute = AdminExamsRouteImport.update({
 const AdminClassesRoute = AdminClassesRouteImport.update({
   id: '/classes',
   path: '/classes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAttendanceRoute = AdminAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAssignmentsRoute = AdminAssignmentsRouteImport.update({
@@ -371,15 +419,23 @@ export interface FileRoutesByFullPath {
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/exams': typeof AdminExamsRoute
   '/admin/fees': typeof AdminFeesRoute
+  '/admin/homework': typeof AdminHomeworkRoute
+  '/admin/library': typeof AdminLibraryRoute
+  '/admin/parents': typeof AdminParentsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/sessions': typeof AdminSessionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRoute
   '/admin/subjects': typeof AdminSubjectsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -422,15 +478,23 @@ export interface FileRoutesByTo {
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/exams': typeof AdminExamsRoute
   '/admin/fees': typeof AdminFeesRoute
+  '/admin/homework': typeof AdminHomeworkRoute
+  '/admin/library': typeof AdminLibraryRoute
+  '/admin/parents': typeof AdminParentsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/sessions': typeof AdminSessionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRoute
   '/admin/subjects': typeof AdminSubjectsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -481,15 +545,23 @@ export interface FileRoutesById {
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/exams': typeof AdminExamsRoute
   '/admin/fees': typeof AdminFeesRoute
+  '/admin/homework': typeof AdminHomeworkRoute
+  '/admin/library': typeof AdminLibraryRoute
+  '/admin/parents': typeof AdminParentsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/sessions': typeof AdminSessionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRoute
   '/admin/subjects': typeof AdminSubjectsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
@@ -541,15 +613,23 @@ export interface FileRouteTypes {
     | '/accountant/reports'
     | '/admin/announcements'
     | '/admin/assignments'
+    | '/admin/attendance'
+    | '/admin/audit'
     | '/admin/classes'
     | '/admin/exams'
     | '/admin/fees'
+    | '/admin/homework'
+    | '/admin/library'
+    | '/admin/parents'
+    | '/admin/reports'
     | '/admin/sessions'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subjects'
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/admin/users'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -592,15 +672,23 @@ export interface FileRouteTypes {
     | '/accountant/reports'
     | '/admin/announcements'
     | '/admin/assignments'
+    | '/admin/attendance'
+    | '/admin/audit'
     | '/admin/classes'
     | '/admin/exams'
     | '/admin/fees'
+    | '/admin/homework'
+    | '/admin/library'
+    | '/admin/parents'
+    | '/admin/reports'
     | '/admin/sessions'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subjects'
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/admin/users'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -650,15 +738,23 @@ export interface FileRouteTypes {
     | '/accountant/reports'
     | '/admin/announcements'
     | '/admin/assignments'
+    | '/admin/attendance'
+    | '/admin/audit'
     | '/admin/classes'
     | '/admin/exams'
     | '/admin/fees'
+    | '/admin/homework'
+    | '/admin/library'
+    | '/admin/parents'
+    | '/admin/reports'
     | '/admin/sessions'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subjects'
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/admin/users'
     | '/api/chat'
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
@@ -1005,6 +1101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/transport': {
       id: '/admin/transport'
       path: '/transport'
@@ -1040,11 +1143,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStudentsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/sessions': {
       id: '/admin/sessions'
       path: '/sessions'
       fullPath: '/admin/sessions'
       preLoaderRoute: typeof AdminSessionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/parents': {
+      id: '/admin/parents'
+      path: '/parents'
+      fullPath: '/admin/parents'
+      preLoaderRoute: typeof AdminParentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/library': {
+      id: '/admin/library'
+      path: '/library'
+      fullPath: '/admin/library'
+      preLoaderRoute: typeof AdminLibraryRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/homework': {
+      id: '/admin/homework'
+      path: '/homework'
+      fullPath: '/admin/homework'
+      preLoaderRoute: typeof AdminHomeworkRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/fees': {
@@ -1066,6 +1204,20 @@ declare module '@tanstack/react-router' {
       path: '/classes'
       fullPath: '/admin/classes'
       preLoaderRoute: typeof AdminClassesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/attendance': {
+      id: '/admin/attendance'
+      path: '/attendance'
+      fullPath: '/admin/attendance'
+      preLoaderRoute: typeof AdminAttendanceRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/assignments': {
@@ -1127,30 +1279,46 @@ const AccountantRouteWithChildren = AccountantRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminAssignmentsRoute: typeof AdminAssignmentsRoute
+  AdminAttendanceRoute: typeof AdminAttendanceRoute
+  AdminAuditRoute: typeof AdminAuditRoute
   AdminClassesRoute: typeof AdminClassesRoute
   AdminExamsRoute: typeof AdminExamsRoute
   AdminFeesRoute: typeof AdminFeesRoute
+  AdminHomeworkRoute: typeof AdminHomeworkRoute
+  AdminLibraryRoute: typeof AdminLibraryRoute
+  AdminParentsRoute: typeof AdminParentsRoute
+  AdminReportsRoute: typeof AdminReportsRoute
   AdminSessionsRoute: typeof AdminSessionsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminStudentsRoute: typeof AdminStudentsRoute
   AdminSubjectsRoute: typeof AdminSubjectsRoute
   AdminTeachersRoute: typeof AdminTeachersRoute
   AdminTimetableRoute: typeof AdminTimetableRoute
   AdminTransportRoute: typeof AdminTransportRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminAssignmentsRoute: AdminAssignmentsRoute,
+  AdminAttendanceRoute: AdminAttendanceRoute,
+  AdminAuditRoute: AdminAuditRoute,
   AdminClassesRoute: AdminClassesRoute,
   AdminExamsRoute: AdminExamsRoute,
   AdminFeesRoute: AdminFeesRoute,
+  AdminHomeworkRoute: AdminHomeworkRoute,
+  AdminLibraryRoute: AdminLibraryRoute,
+  AdminParentsRoute: AdminParentsRoute,
+  AdminReportsRoute: AdminReportsRoute,
   AdminSessionsRoute: AdminSessionsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminStudentsRoute: AdminStudentsRoute,
   AdminSubjectsRoute: AdminSubjectsRoute,
   AdminTeachersRoute: AdminTeachersRoute,
   AdminTimetableRoute: AdminTimetableRoute,
   AdminTransportRoute: AdminTransportRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
