@@ -65,6 +65,7 @@ export const createSchoolAdmin = createServerFn({ method: "POST" })
       redirectTo: `${process.env.PUBLIC_SITE_URL ?? ""}/reset-password`,
     });
     if (error) throw error;
+    await audit(context, "school_admin.invited", "user", created.user?.id ?? null, { email: data.email }, data.school_id);
     return { id: created.user?.id, invited: true };
   });
 
