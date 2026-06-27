@@ -49,7 +49,7 @@ export function ResultsPanel({ studentId }: { studentId: string }) {
   useEffect(() => {
     if (!studentId) return;
     supabase.from("exam_results")
-      .select("marks_obtained,max_marks,grade,subjects(name),exams(name)")
+      .select("marks,max_marks,subjects(name),exams(name)")
       .eq("student_id", studentId).order("created_at", { ascending: false }).limit(8)
       .then(({ data }) => setRows(data ?? []));
   }, [studentId]);
@@ -65,7 +65,7 @@ export function ResultsPanel({ studentId }: { studentId: string }) {
                 <div>{r.subjects?.name ?? "Subject"}</div>
                 <div className="text-xs text-muted-foreground">{r.exams?.name ?? "Exam"}</div>
               </div>
-              <div className="font-mono">{r.marks_obtained ?? "—"}/{r.max_marks ?? "—"} {r.grade && <span className="ml-2 text-xs">({r.grade})</span>}</div>
+              <div className="font-mono">{r.marks ?? "—"}/{r.max_marks ?? "—"}</div>
             </li>
           ))}
         </ul>
@@ -90,10 +90,11 @@ export function TimetablePanel({ studentId }: { studentId: string }) {
     (async () => {
       const { data: st } = await supabase.from("students").select("class_id,section_id").eq("id", studentId).single();
       if (!st?.class_id) { setRows([]); return; }
-      const { data } = await supabase.from("timetable")
-        .select("day,period,start_time,end_time,subjects(name),teachers(full_name)")
-        .eq("class_id", st.class_id).eq("section_id", st.section_id ?? "")
-        .order("day").order("period");
+      let q = supabase.from("timetable")
+        .select("day_of_week,start_time,end_time,subjects(name),teachers(full_name)")
+        .eq("class_id", st.class_id);
+      if (st.section_id) q = q.eq("section_id", st.section_id);
+      const { data } = await q.order("day_of_week").order("start_time");
       setRows(data ?? []);
     })();
   }, [studentId]);
@@ -105,7 +106,7 @@ export function TimetablePanel({ studentId }: { studentId: string }) {
         <ul className="divide-y divide-border/60 text-sm">
           {rows.slice(0, 6).map((r: any, i: number) => (
             <li key={i} className="py-2 flex items-center justify-between">
-              <div><div>{r.subjects?.name ?? "—"}</div><div className="text-xs text-muted-foreground">{r.day} · P{r.period}</div></div>
+              <div><div>{r.subjects?.name ?? "—"}</div><div className="text-xs text-muted-foreground">{["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][r.day_of_week % 7] ?? "—"} · {r.start_time?.slice(0,5)}</div></div>
               <div className="text-xs text-muted-foreground">{r.teachers?.full_name ?? "—"}</div>
             </li>
           ))}
