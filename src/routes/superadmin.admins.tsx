@@ -26,7 +26,7 @@ function Page() {
       supabase
         .from("user_roles")
         .select("id, user_id, school_id, profiles(full_name), schools(name)")
-        .eq("role", "admin"),
+        .eq("role", "school_admin"),
     ]);
     setSchools(sc ?? []);
     setAdmins(ad ?? []);

@@ -30,7 +30,7 @@ export const createSchoolAdmin = createServerFn({ method: "POST" })
       email: data.email,
       password: data.password,
       email_confirm: true,
-      user_metadata: { full_name: data.full_name, role: "admin", school_id: data.school_id },
+      user_metadata: { full_name: data.full_name, role: "school_admin", school_id: data.school_id },
     });
     if (error) throw error;
     return { id: created.user?.id };
@@ -52,7 +52,7 @@ export const createStaffUser = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId, _role: "admin",
+      _user_id: context.userId, _role: "school_admin",
     });
     if (!isAdmin) throw new Error("Forbidden: school admin only");
 
@@ -95,7 +95,7 @@ export const createStudentWithParent = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId, _role: "admin",
+      _user_id: context.userId, _role: "school_admin",
     });
     if (!isAdmin) throw new Error("Forbidden: school admin only");
 

@@ -12,7 +12,7 @@ function Page() {
   useEffect(() => { supabase.from("classes").select("id,name").then(({ data }) => setClasses(data ?? [])); }, []);
 
   return (
-    <RoleShell role="admin" navItems={adminNav}>
+    <RoleShell role="school_admin" navItems={adminNav}>
       <CrudTable
         title="Exams"
         table="exams"

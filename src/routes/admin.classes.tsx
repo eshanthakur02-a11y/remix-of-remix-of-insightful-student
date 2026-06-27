@@ -14,7 +14,7 @@ function Page() {
   }, []);
 
   return (
-    <RoleShell role="admin" navItems={adminNav}>
+    <RoleShell role="school_admin" navItems={adminNav}>
       <div className="grid lg:grid-cols-2 gap-6">
         <CrudTable
           title="Classes"
