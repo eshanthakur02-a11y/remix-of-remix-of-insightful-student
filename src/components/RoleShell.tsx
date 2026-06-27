@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABEL, signOut, useAuth, type AppRole } from "@/lib/auth";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export type NavItem = { to: string; label: string; icon: LucideIcon };
 
