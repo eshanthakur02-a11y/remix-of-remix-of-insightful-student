@@ -46,6 +46,7 @@ import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
 import { Route as StudentTransportRouteImport } from './routes/student.transport'
 import { Route as StudentTimetableRouteImport } from './routes/student.timetable'
 import { Route as StudentResultsRouteImport } from './routes/student.results'
+import { Route as StudentHomeworkRouteImport } from './routes/student.homework'
 import { Route as StudentFeesRouteImport } from './routes/student.fees'
 import { Route as StudentAttendanceRouteImport } from './routes/student.attendance'
 import { Route as ParentChildrenRouteImport } from './routes/parent.children'
@@ -261,6 +262,11 @@ const StudentResultsRoute = StudentResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentHomeworkRoute = StudentHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentFeesRoute = StudentFeesRouteImport.update({
   id: '/fees',
   path: '/fees',
@@ -454,6 +460,7 @@ export interface FileRoutesByFullPath {
   '/parent/children': typeof ParentChildrenRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -515,6 +522,7 @@ export interface FileRoutesByTo {
   '/parent/children': typeof ParentChildrenRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -584,6 +592,7 @@ export interface FileRoutesById {
   '/parent/children': typeof ParentChildrenRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -654,6 +663,7 @@ export interface FileRouteTypes {
     | '/parent/children'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -715,6 +725,7 @@ export interface FileRouteTypes {
     | '/parent/children'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -783,6 +794,7 @@ export interface FileRouteTypes {
     | '/parent/children'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -1090,6 +1102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentResultsRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/homework': {
+      id: '/student/homework'
+      path: '/homework'
+      fullPath: '/student/homework'
+      preLoaderRoute: typeof StudentHomeworkRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/fees': {
       id: '/student/fees'
       path: '/fees'
@@ -1378,6 +1397,7 @@ const ParentRouteWithChildren =
 interface StudentRouteChildren {
   StudentAttendanceRoute: typeof StudentAttendanceRoute
   StudentFeesRoute: typeof StudentFeesRoute
+  StudentHomeworkRoute: typeof StudentHomeworkRoute
   StudentResultsRoute: typeof StudentResultsRoute
   StudentTimetableRoute: typeof StudentTimetableRoute
   StudentTransportRoute: typeof StudentTransportRoute
@@ -1387,6 +1407,7 @@ interface StudentRouteChildren {
 const StudentRouteChildren: StudentRouteChildren = {
   StudentAttendanceRoute: StudentAttendanceRoute,
   StudentFeesRoute: StudentFeesRoute,
+  StudentHomeworkRoute: StudentHomeworkRoute,
   StudentResultsRoute: StudentResultsRoute,
   StudentTimetableRoute: StudentTimetableRoute,
   StudentTransportRoute: StudentTransportRoute,
