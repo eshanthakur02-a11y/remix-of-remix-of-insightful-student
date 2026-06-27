@@ -2,29 +2,45 @@ import {
   LayoutDashboard, School, BookOpen, GraduationCap, Users, Calendar,
   Wallet, ClipboardList, Bus, Megaphone, UserCheck, MessageSquare,
   Receipt, FileBarChart, Building2, Heart, CalendarRange,
+  Bell, Settings, ShieldCheck, Library, NotebookPen, FileText,
 } from "lucide-react";
 import type { NavItem } from "@/components/RoleShell";
 
 export const superAdminNav: NavItem[] = [
-  { to: "/superadmin", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/superadmin/schools", label: "Schools", icon: Building2 },
-  { to: "/superadmin/admins", label: "School Admins", icon: GraduationCap },
+  { to: "/superadmin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/superadmin/schools", label: "Schools", icon: Building2, group: "Tenants" },
+  { to: "/superadmin/admins", label: "School Admins", icon: GraduationCap, group: "Tenants" },
 ];
 
 export const adminNav: NavItem[] = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/admin/sessions", label: "Academic Sessions", icon: CalendarRange },
-  { to: "/admin/classes", label: "Classes & Sections", icon: School },
-  { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
-  { to: "/admin/teachers", label: "Teachers", icon: GraduationCap },
-  { to: "/admin/students", label: "Students", icon: Users },
-  { to: "/admin/assignments", label: "Assign Teachers", icon: UserCheck },
-  { to: "/admin/timetable", label: "Timetable", icon: Calendar },
-  { to: "/admin/fees", label: "Fees", icon: Wallet },
-  { to: "/admin/exams", label: "Exams", icon: ClipboardList },
-  { to: "/admin/transport", label: "Transport", icon: Bus },
-  { to: "/admin/announcements", label: "Announcements", icon: Megaphone },
-  { to: "/messages", label: "Messages", icon: MessageSquare },
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+
+  { to: "/admin/sessions", label: "Academic Sessions", icon: CalendarRange, group: "Academics" },
+  { to: "/admin/classes", label: "Classes & Sections", icon: School, group: "Academics" },
+  { to: "/admin/subjects", label: "Subjects", icon: BookOpen, group: "Academics" },
+  { to: "/admin/timetable", label: "Timetable", icon: Calendar, group: "Academics" },
+  { to: "/admin/homework", label: "Homework", icon: NotebookPen, group: "Academics" },
+  { to: "/admin/exams", label: "Exams & Results", icon: ClipboardList, group: "Academics" },
+  { to: "/admin/library", label: "Library", icon: Library, group: "Academics" },
+
+  { to: "/admin/teachers", label: "Teachers", icon: GraduationCap, group: "People" },
+  { to: "/admin/students", label: "Students", icon: Users, group: "People" },
+  { to: "/admin/parents", label: "Parents", icon: Heart, group: "People" },
+  { to: "/admin/assignments", label: "Assign Teachers", icon: UserCheck, group: "People" },
+  { to: "/admin/users", label: "User Management", icon: ShieldCheck, group: "People" },
+
+  { to: "/admin/attendance", label: "Attendance Register", icon: UserCheck, group: "Operations" },
+  { to: "/admin/transport", label: "Transport", icon: Bus, group: "Operations" },
+
+  { to: "/admin/fees", label: "Fee Structure", icon: Wallet, group: "Finance" },
+  { to: "/admin/reports", label: "Reports", icon: FileBarChart, group: "Finance" },
+
+  { to: "/admin/announcements", label: "Announcements", icon: Megaphone, group: "Communication" },
+  { to: "/messages", label: "Messages", icon: MessageSquare, group: "Communication" },
+  { to: "/notifications", label: "Notifications", icon: Bell, group: "Communication" },
+
+  { to: "/admin/settings", label: "School Settings", icon: Settings, group: "System" },
+  { to: "/admin/audit", label: "Audit Logs", icon: FileText, group: "System" },
 ];
 
 export const teacherNav: NavItem[] = [
