@@ -256,6 +256,7 @@ export const setSchoolStatus = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("schools").update({ status: data.status }).eq("id", data.school_id);
     if (error) throw error;
+    await audit(context, data.status === "suspended" ? "school.suspended" : "school.activated", "school", data.school_id, {}, data.school_id);
     return { ok: true };
   });
 
