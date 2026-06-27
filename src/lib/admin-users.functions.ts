@@ -102,6 +102,7 @@ export const createStaffUser = createServerFn({ method: "POST" })
         employee_no: data.employee_no ?? null,
       });
     }
+    await audit(context, `${data.role}.invited`, "user", userId ?? null, { email: data.email, role: data.role });
     return { id: userId, invited: true };
   });
 
