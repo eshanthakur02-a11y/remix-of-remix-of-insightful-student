@@ -237,13 +237,6 @@ function Page() {
           </form>
         </DialogContent>
       </Dialog>
-
-      <ConfirmDialog
-        open={!!confirmDel} onOpenChange={(o) => !o && setConfirmDel(null)}
-        title="Delete homework?" description={confirmDel?.title}
-        confirmLabel="Delete" variant="destructive"
-        onConfirm={() => confirmDel && remove(confirmDel)}
-      />
     </RoleShell>
   );
 }
