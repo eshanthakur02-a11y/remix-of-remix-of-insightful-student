@@ -49,6 +49,7 @@ import { Route as StudentResultsRouteImport } from './routes/student.results'
 import { Route as StudentHomeworkRouteImport } from './routes/student.homework'
 import { Route as StudentFeesRouteImport } from './routes/student.fees'
 import { Route as StudentAttendanceRouteImport } from './routes/student.attendance'
+import { Route as ParentHomeworkRouteImport } from './routes/parent.homework'
 import { Route as ParentChildrenRouteImport } from './routes/parent.children'
 import { Route as ApiN8nFetchRouteImport } from './routes/api/n8n-fetch'
 import { Route as ApiN8nChatRouteImport } from './routes/api/n8n-chat'
@@ -277,6 +278,11 @@ const StudentAttendanceRoute = StudentAttendanceRouteImport.update({
   path: '/attendance',
   getParentRoute: () => StudentRoute,
 } as any)
+const ParentHomeworkRoute = ParentHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => ParentRoute,
+} as any)
 const ParentChildrenRoute = ParentChildrenRouteImport.update({
   id: '/children',
   path: '/children',
@@ -458,6 +464,7 @@ export interface FileRoutesByFullPath {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
   '/student/homework': typeof StudentHomeworkRoute
@@ -520,6 +527,7 @@ export interface FileRoutesByTo {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
   '/student/homework': typeof StudentHomeworkRoute
@@ -590,6 +598,7 @@ export interface FileRoutesById {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
   '/student/homework': typeof StudentHomeworkRoute
@@ -661,6 +670,7 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
     | '/student/homework'
@@ -723,6 +733,7 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
     | '/student/homework'
@@ -792,6 +803,7 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
     | '/student/homework'
@@ -1123,6 +1135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentAttendanceRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/parent/homework': {
+      id: '/parent/homework'
+      path: '/homework'
+      fullPath: '/parent/homework'
+      preLoaderRoute: typeof ParentHomeworkRouteImport
+      parentRoute: typeof ParentRoute
+    }
     '/parent/children': {
       id: '/parent/children'
       path: '/children'
@@ -1383,11 +1402,13 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ParentRouteChildren {
   ParentChildrenRoute: typeof ParentChildrenRoute
+  ParentHomeworkRoute: typeof ParentHomeworkRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
 const ParentRouteChildren: ParentRouteChildren = {
   ParentChildrenRoute: ParentChildrenRoute,
+  ParentHomeworkRoute: ParentHomeworkRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 
