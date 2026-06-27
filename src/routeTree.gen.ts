@@ -74,6 +74,7 @@ import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcem
 import { Route as AccountantReportsRouteImport } from './routes/accountant.reports'
 import { Route as AccountantPaymentsRouteImport } from './routes/accountant.payments'
 import { Route as AccountantFeesRouteImport } from './routes/accountant.fees'
+import { Route as TeacherHomeworkIdRouteImport } from './routes/teacher.homework.$id'
 
 const TransportRoute = TransportRouteImport.update({
   id: '/transport',
@@ -400,6 +401,11 @@ const AccountantFeesRoute = AccountantFeesRouteImport.update({
   path: '/fees',
   getParentRoute: () => AccountantRoute,
 } as any)
+const TeacherHomeworkIdRoute = TeacherHomeworkIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TeacherHomeworkRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -455,7 +461,7 @@ export interface FileRoutesByFullPath {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
-  '/teacher/homework': typeof TeacherHomeworkRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -467,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -515,7 +522,7 @@ export interface FileRoutesByTo {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
-  '/teacher/homework': typeof TeacherHomeworkRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -527,6 +534,7 @@ export interface FileRoutesByTo {
   '/superadmin': typeof SuperadminIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/transport': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -583,7 +591,7 @@ export interface FileRoutesById {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
-  '/teacher/homework': typeof TeacherHomeworkRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -595,6 +603,7 @@ export interface FileRoutesById {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -664,6 +673,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/teacher/homework/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -724,6 +734,7 @@ export interface FileRouteTypes {
     | '/superadmin'
     | '/teacher'
     | '/transport'
+    | '/teacher/homework/$id'
   id:
     | '__root__'
     | '/'
@@ -791,6 +802,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/teacher/homework/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1274,6 +1286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountantFeesRouteImport
       parentRoute: typeof AccountantRoute
     }
+    '/teacher/homework/$id': {
+      id: '/teacher/homework/$id'
+      path: '/$id'
+      fullPath: '/teacher/homework/$id'
+      preLoaderRoute: typeof TeacherHomeworkIdRouteImport
+      parentRoute: typeof TeacherHomeworkRoute
+    }
   }
 }
 
@@ -1405,9 +1424,21 @@ const SuperadminRouteWithChildren = SuperadminRoute._addFileChildren(
   SuperadminRouteChildren,
 )
 
+interface TeacherHomeworkRouteChildren {
+  TeacherHomeworkIdRoute: typeof TeacherHomeworkIdRoute
+}
+
+const TeacherHomeworkRouteChildren: TeacherHomeworkRouteChildren = {
+  TeacherHomeworkIdRoute: TeacherHomeworkIdRoute,
+}
+
+const TeacherHomeworkRouteWithChildren = TeacherHomeworkRoute._addFileChildren(
+  TeacherHomeworkRouteChildren,
+)
+
 interface TeacherRouteChildren {
   TeacherAttendanceRoute: typeof TeacherAttendanceRoute
-  TeacherHomeworkRoute: typeof TeacherHomeworkRoute
+  TeacherHomeworkRoute: typeof TeacherHomeworkRouteWithChildren
   TeacherResultsRoute: typeof TeacherResultsRoute
   TeacherTimetableRoute: typeof TeacherTimetableRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -1415,7 +1446,7 @@ interface TeacherRouteChildren {
 
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherAttendanceRoute: TeacherAttendanceRoute,
-  TeacherHomeworkRoute: TeacherHomeworkRoute,
+  TeacherHomeworkRoute: TeacherHomeworkRouteWithChildren,
   TeacherResultsRoute: TeacherResultsRoute,
   TeacherTimetableRoute: TeacherTimetableRoute,
   TeacherIndexRoute: TeacherIndexRoute,
