@@ -186,7 +186,12 @@ function Page() {
                 <Button asChild size="sm" variant="ghost"><Link to="/teacher/homework/$id" params={{ id: r.id }}><ExternalLink className="h-4 w-4" /></Link></Button>
                 <Button size="sm" variant="ghost" onClick={() => startEdit(r)}><Pencil className="h-4 w-4" /></Button>
                 <Button size="sm" variant="ghost" onClick={() => archive(r)}><Archive className="h-4 w-4" /></Button>
-                <Button size="sm" variant="ghost" onClick={() => setConfirmDel(r)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                <ConfirmDialog
+                  trigger={<Button size="sm" variant="ghost"><Trash2 className="h-4 w-4 text-destructive" /></Button>}
+                  title="Delete homework?" description={r.title}
+                  confirmLabel="Delete" destructive
+                  onConfirm={async () => { await remove(r); }}
+                />
               </div>
             ),
           },
