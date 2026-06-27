@@ -25,7 +25,7 @@ function Page() {
   }, []);
 
   return (
-    <RoleShell role="admin" navItems={adminNav}>
+    <RoleShell role="school_admin" navItems={adminNav}>
       <CrudTable
         title="Timetable"
         table="timetable"

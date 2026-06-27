@@ -17,7 +17,7 @@ function Page() {
   const create = useServerFn(createSchoolAdmin);
   const [schools, setSchools] = useState<{ id: string; name: string }[]>([]);
   const [admins, setAdmins] = useState<any[]>([]);
-  const [form, setForm] = useState({ full_name: "", email: "", password: "", school_id: "" });
+  const [form, setForm] = useState({ full_name: "", email: "", school_id: "" });
   const [busy, setBusy] = useState(false);
 
   async function load() {
@@ -26,7 +26,7 @@ function Page() {
       supabase
         .from("user_roles")
         .select("id, user_id, school_id, profiles(full_name), schools(name)")
-        .eq("role", "admin"),
+        .eq("role", "school_admin"),
     ]);
     setSchools(sc ?? []);
     setAdmins(ad ?? []);
@@ -38,8 +38,8 @@ function Page() {
     setBusy(true);
     try {
       await create({ data: form });
-      toast.success("School admin created");
-      setForm({ full_name: "", email: "", password: "", school_id: "" });
+      toast.success("Invite email sent");
+      setForm({ full_name: "", email: "", school_id: "" });
       load();
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to create admin");
@@ -49,12 +49,11 @@ function Page() {
   return (
     <RoleShell role="super_admin" navItems={superAdminNav}>
       <h1 className="text-2xl font-semibold mb-1">School Admins</h1>
-      <p className="text-sm text-muted-foreground mb-6">Create a School Admin and assign them to a school.</p>
+      <p className="text-sm text-muted-foreground mb-6">Invite a new School Admin by email and assign them to a school.</p>
 
       <form onSubmit={submit} className="glass-card p-5 grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 max-w-3xl">
         <div className="space-y-1.5"><Label>Full name</Label><Input required value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} /></div>
         <div className="space-y-1.5"><Label>Email</Label><Input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
-        <div className="space-y-1.5"><Label>Temporary password</Label><Input type="password" required minLength={8} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></div>
         <div className="space-y-1.5">
           <Label>School</Label>
           <Select value={form.school_id} onValueChange={(v) => setForm({ ...form, school_id: v })}>
@@ -62,7 +61,7 @@ function Page() {
             <SelectContent>{schools.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
-        <div className="md:col-span-2"><Button type="submit" disabled={busy || !form.school_id}>{busy ? "Creating…" : "Create School Admin"}</Button></div>
+        <div className="md:col-span-2"><Button type="submit" disabled={busy || !form.school_id}>{busy ? "Sending invite…" : "Invite School Admin"}</Button></div>
       </form>
 
       <div className="glass-card p-5">

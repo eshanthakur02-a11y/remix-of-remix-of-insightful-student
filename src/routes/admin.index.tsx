@@ -66,7 +66,7 @@ function AdminDashboard() {
   const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" });
 
   return (
-    <RoleShell role="admin" navItems={adminNav}>
+    <RoleShell role="school_admin" navItems={adminNav}>
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
           Welcome back, <span className="text-primary">{name}</span>

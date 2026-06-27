@@ -14,7 +14,7 @@ function Page() {
     (async () => {
       const [s, a, p] = await Promise.all([
         supabase.from("schools").select("id", { count: "exact", head: true }),
-        supabase.from("user_roles").select("id", { count: "exact", head: true }).eq("role", "admin"),
+        supabase.from("user_roles").select("id", { count: "exact", head: true }).eq("role", "school_admin"),
         supabase.from("profiles").select("id", { count: "exact", head: true }),
       ]);
       setCounts({ schools: s.count ?? 0, admins: a.count ?? 0, users: p.count ?? 0 });

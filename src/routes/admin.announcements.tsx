@@ -7,7 +7,7 @@ export const Route = createFileRoute("/admin/announcements")({ component: Page }
 
 function Page() {
   return (
-    <RoleShell role="admin" navItems={adminNav}>
+    <RoleShell role="school_admin" navItems={adminNav}>
       <CrudTable
         title="Announcements"
         table="announcements"

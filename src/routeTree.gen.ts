@@ -15,13 +15,17 @@ import { Route as SuperadminRouteImport } from './routes/superadmin'
 import { Route as StudentsRouteImport } from './routes/students'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as NoRoleRouteImport } from './routes/no-role'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountantRouteImport } from './routes/accountant'
+import { Route as AccessDeniedRouteImport } from './routes/access-denied'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TransportIndexRouteImport } from './routes/transport.index'
 import { Route as TeacherIndexRouteImport } from './routes/teacher.index'
@@ -91,6 +95,11 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ParentRoute = ParentRouteImport.update({
   id: '/parent',
   path: '/parent',
@@ -99,6 +108,11 @@ const ParentRoute = ParentRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoRoleRoute = NoRoleRouteImport.update({
+  id: '/no-role',
+  path: '/no-role',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MessagesRoute = MessagesRouteImport.update({
@@ -116,6 +130,11 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -124,6 +143,11 @@ const AdminRoute = AdminRouteImport.update({
 const AccountantRoute = AccountantRouteImport.update({
   id: '/accountant',
   path: '/accountant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessDeniedRoute = AccessDeniedRouteImport.update({
+  id: '/access-denied',
+  path: '/access-denied',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -319,13 +343,17 @@ const AccountantFeesRoute = AccountantFeesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/access-denied': typeof AccessDeniedRoute
   '/accountant': typeof AccountantRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
+  '/no-role': typeof NoRoleRoute
   '/notifications': typeof NotificationsRoute
   '/parent': typeof ParentRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
   '/students': typeof StudentsRouteWithChildren
@@ -372,10 +400,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/access-denied': typeof AccessDeniedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
+  '/no-role': typeof NoRoleRoute
   '/notifications': typeof NotificationsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/students': typeof StudentsRouteWithChildren
   '/accountant/fees': typeof AccountantFeesRoute
@@ -419,13 +451,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/access-denied': typeof AccessDeniedRoute
   '/accountant': typeof AccountantRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
+  '/no-role': typeof NoRoleRoute
   '/notifications': typeof NotificationsRoute
   '/parent': typeof ParentRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
   '/students': typeof StudentsRouteWithChildren
@@ -474,13 +510,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/access-denied'
     | '/accountant'
     | '/admin'
+    | '/forgot-password'
     | '/insights'
     | '/login'
     | '/messages'
+    | '/no-role'
     | '/notifications'
     | '/parent'
+    | '/reset-password'
     | '/signup'
     | '/student'
     | '/students'
@@ -527,10 +567,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/access-denied'
+    | '/forgot-password'
     | '/insights'
     | '/login'
     | '/messages'
+    | '/no-role'
     | '/notifications'
+    | '/reset-password'
     | '/signup'
     | '/students'
     | '/accountant/fees'
@@ -573,13 +617,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/access-denied'
     | '/accountant'
     | '/admin'
+    | '/forgot-password'
     | '/insights'
     | '/login'
     | '/messages'
+    | '/no-role'
     | '/notifications'
     | '/parent'
+    | '/reset-password'
     | '/signup'
     | '/student'
     | '/students'
@@ -627,13 +675,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccessDeniedRoute: typeof AccessDeniedRoute
   AccountantRoute: typeof AccountantRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
   MessagesRoute: typeof MessagesRoute
+  NoRoleRoute: typeof NoRoleRoute
   NotificationsRoute: typeof NotificationsRoute
   ParentRoute: typeof ParentRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   StudentRoute: typeof StudentRouteWithChildren
   StudentsRoute: typeof StudentsRouteWithChildren
@@ -689,6 +741,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/parent': {
       id: '/parent'
       path: '/parent'
@@ -701,6 +760,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/no-role': {
+      id: '/no-role'
+      path: '/no-role'
+      fullPath: '/no-role'
+      preLoaderRoute: typeof NoRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/messages': {
@@ -724,6 +790,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -736,6 +809,13 @@ declare module '@tanstack/react-router' {
       path: '/accountant'
       fullPath: '/accountant'
       preLoaderRoute: typeof AccountantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/access-denied': {
+      id: '/access-denied'
+      path: '/access-denied'
+      fullPath: '/access-denied'
+      preLoaderRoute: typeof AccessDeniedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -1152,13 +1232,17 @@ const TransportRouteWithChildren = TransportRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccessDeniedRoute: AccessDeniedRoute,
   AccountantRoute: AccountantRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
   MessagesRoute: MessagesRoute,
+  NoRoleRoute: NoRoleRoute,
   NotificationsRoute: NotificationsRoute,
   ParentRoute: ParentRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   StudentRoute: StudentRouteWithChildren,
   StudentsRoute: StudentsRouteWithChildren,
@@ -1172,13 +1256,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

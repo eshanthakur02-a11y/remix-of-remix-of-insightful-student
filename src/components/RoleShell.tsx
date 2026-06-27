@@ -19,15 +19,21 @@ export function RoleShell({
   const { theme, toggle } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, role: currentRole, loading } = useAuth();
+  const { user, role: currentRole, profile, loading, profileLoading } = useAuth();
 
   useEffect(() => {
     if (loading) return;
-    if (!user) navigate({ to: "/login" });
-    else if (currentRole && currentRole !== role) navigate({ to: "/" });
-  }, [user, currentRole, loading, role, navigate]);
+    if (!user) { navigate({ to: "/login" }); return; }
+    if (profileLoading) return;
+    if (!currentRole) { navigate({ to: "/no-role" }); return; }
+    if (currentRole !== "super_admin" && (profile.status === "suspended" || profile.schoolStatus === "suspended")) {
+      navigate({ to: "/access-denied" });
+      return;
+    }
+    if (currentRole !== role) navigate({ to: "/access-denied" });
+  }, [user, currentRole, profile, loading, profileLoading, role, navigate]);
 
-  if (loading || !user) {
+  if (loading || profileLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Loading…</div>;
   }
 
