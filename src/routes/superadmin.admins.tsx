@@ -23,13 +23,22 @@ function Page() {
   async function load() {
     const [{ data: sc }, { data: ad }] = await Promise.all([
       supabase.from("schools").select("id,name").order("name"),
-      supabase
-        .from("user_roles")
-        .select("id, user_id, school_id, profiles(full_name), schools(name)")
-        .eq("role", "school_admin"),
+      supabase.from("user_roles").select("id,user_id,school_id").eq("role", "school_admin"),
     ]);
-    setSchools(sc ?? []);
-    setAdmins(ad ?? []);
+    const schoolsList = sc ?? [];
+    const adminRows = ad ?? [];
+    const userIds = adminRows.map((r: any) => r.user_id);
+    const { data: profs } = userIds.length
+      ? await supabase.from("profiles").select("id,full_name").in("id", userIds)
+      : { data: [] as { id: string; full_name: string }[] };
+    const profMap = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
+    const schoolMap = new Map(schoolsList.map((s) => [s.id, s.name]));
+    setSchools(schoolsList);
+    setAdmins(adminRows.map((r: any) => ({
+      ...r,
+      profiles: { full_name: profMap.get(r.user_id) ?? "" },
+      schools: { name: schoolMap.get(r.school_id) ?? "" },
+    })));
   }
   useEffect(() => { load(); }, []);
 
