@@ -97,6 +97,7 @@ export function RoleShell({
             <span className="font-semibold text-sm">{ROLE_LABEL[role]}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
+            <NotificationBell userId={user.id} />
             <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
