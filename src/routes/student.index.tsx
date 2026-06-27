@@ -10,7 +10,7 @@ export const Route = createFileRoute("/student/")({ component: Page });
 
 function Page() {
   const { user } = useAuth();
-  const [student, setStudent] = useState<{ id: string; full_name: string; admission_no: string } | null>(null);
+  const [student, setStudent] = useState<{ id: string; full_name: string; admission_no: string | null } | null>(null);
 
   useEffect(() => {
     if (!user) return;
