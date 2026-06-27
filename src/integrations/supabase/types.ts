@@ -93,18 +93,21 @@ export type Database = {
           id: string
           name: string
           school_id: string | null
+          status: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
           school_id?: string | null
+          status?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
           school_id?: string | null
+          status?: string
         }
         Relationships: [
           {
@@ -412,19 +415,25 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          last_login: string | null
           school_id: string | null
+          status: string
         }
         Insert: {
           created_at?: string
           full_name?: string | null
           id: string
+          last_login?: string | null
           school_id?: string | null
+          status?: string
         }
         Update: {
           created_at?: string
           full_name?: string | null
           id?: string
+          last_login?: string | null
           school_id?: string | null
+          status?: string
         }
         Relationships: [
           {
@@ -445,6 +454,7 @@ export type Database = {
           id: string
           name: string
           phone: string | null
+          status: string
           updated_at: string
         }
         Insert: {
@@ -455,6 +465,7 @@ export type Database = {
           id?: string
           name: string
           phone?: string | null
+          status?: string
           updated_at?: string
         }
         Update: {
@@ -465,6 +476,7 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -475,18 +487,24 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          school_id: string | null
+          status: string
         }
         Insert: {
           class_id: string
           created_at?: string
           id?: string
           name: string
+          school_id?: string | null
+          status?: string
         }
         Update: {
           class_id?: string
           created_at?: string
           id?: string
           name?: string
+          school_id?: string | null
+          status?: string
         }
         Relationships: [
           {
@@ -494,6 +512,13 @@ export type Database = {
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
             referencedColumns: ["id"]
           },
         ]
@@ -629,6 +654,52 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teacher_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          section_id: string
+          subject_id: string | null
+          teacher_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          section_id: string
+          subject_id?: string | null
+          teacher_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          section_id?: string
+          subject_id?: string | null
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_assignments_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_assignments_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
             referencedColumns: ["id"]
           },
         ]
@@ -870,6 +941,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auth_role: { Args: never; Returns: string }
+      auth_school_id: { Args: never; Returns: string }
       get_user_school: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -886,7 +959,7 @@ export type Database = {
     }
     Enums: {
       app_role:
-        | "admin"
+        | "school_admin"
         | "teacher"
         | "student"
         | "accountant"
@@ -1021,7 +1094,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: [
-        "admin",
+        "school_admin",
         "teacher",
         "student",
         "accountant",
