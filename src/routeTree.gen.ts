@@ -38,6 +38,8 @@ import { Route as TransportRoutesRouteImport } from './routes/transport.routes'
 import { Route as TransportAssignmentsRouteImport } from './routes/transport.assignments'
 import { Route as TeacherTimetableRouteImport } from './routes/teacher.timetable'
 import { Route as TeacherResultsRouteImport } from './routes/teacher.results'
+import { Route as TeacherLibraryRouteImport } from './routes/teacher.library'
+import { Route as TeacherHomeworkRouteImport } from './routes/teacher.homework'
 import { Route as TeacherAttendanceRouteImport } from './routes/teacher.attendance'
 import { Route as SuperadminSchoolsRouteImport } from './routes/superadmin.schools'
 import { Route as SuperadminAdminsRouteImport } from './routes/superadmin.admins'
@@ -45,8 +47,11 @@ import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
 import { Route as StudentTransportRouteImport } from './routes/student.transport'
 import { Route as StudentTimetableRouteImport } from './routes/student.timetable'
 import { Route as StudentResultsRouteImport } from './routes/student.results'
+import { Route as StudentLibraryRouteImport } from './routes/student.library'
+import { Route as StudentHomeworkRouteImport } from './routes/student.homework'
 import { Route as StudentFeesRouteImport } from './routes/student.fees'
 import { Route as StudentAttendanceRouteImport } from './routes/student.attendance'
+import { Route as ParentHomeworkRouteImport } from './routes/parent.homework'
 import { Route as ParentChildrenRouteImport } from './routes/parent.children'
 import { Route as ApiN8nFetchRouteImport } from './routes/api/n8n-fetch'
 import { Route as ApiN8nChatRouteImport } from './routes/api/n8n-chat'
@@ -73,6 +78,7 @@ import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcem
 import { Route as AccountantReportsRouteImport } from './routes/accountant.reports'
 import { Route as AccountantPaymentsRouteImport } from './routes/accountant.payments'
 import { Route as AccountantFeesRouteImport } from './routes/accountant.fees'
+import { Route as TeacherHomeworkIdRouteImport } from './routes/teacher.homework.$id'
 
 const TransportRoute = TransportRouteImport.update({
   id: '/transport',
@@ -219,6 +225,16 @@ const TeacherResultsRoute = TeacherResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherLibraryRoute = TeacherLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherHomeworkRoute = TeacherHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const TeacherAttendanceRoute = TeacherAttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
@@ -254,6 +270,16 @@ const StudentResultsRoute = StudentResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentLibraryRoute = StudentLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentHomeworkRoute = StudentHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentFeesRoute = StudentFeesRouteImport.update({
   id: '/fees',
   path: '/fees',
@@ -263,6 +289,11 @@ const StudentAttendanceRoute = StudentAttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
   getParentRoute: () => StudentRoute,
+} as any)
+const ParentHomeworkRoute = ParentHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => ParentRoute,
 } as any)
 const ParentChildrenRoute = ParentChildrenRouteImport.update({
   id: '/children',
@@ -394,6 +425,11 @@ const AccountantFeesRoute = AccountantFeesRouteImport.update({
   path: '/fees',
   getParentRoute: () => AccountantRoute,
 } as any)
+const TeacherHomeworkIdRoute = TeacherHomeworkIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TeacherHomeworkRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -440,8 +476,11 @@ export interface FileRoutesByFullPath {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
+  '/student/library': typeof StudentLibraryRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -449,6 +488,8 @@ export interface FileRoutesByFullPath {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -460,6 +501,7 @@ export interface FileRoutesByFullPath {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -499,8 +541,11 @@ export interface FileRoutesByTo {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
+  '/student/library': typeof StudentLibraryRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -508,6 +553,8 @@ export interface FileRoutesByTo {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -519,6 +566,7 @@ export interface FileRoutesByTo {
   '/superadmin': typeof SuperadminIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/transport': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -566,8 +614,11 @@ export interface FileRoutesById {
   '/api/n8n-chat': typeof ApiN8nChatRoute
   '/api/n8n-fetch': typeof ApiN8nFetchRoute
   '/parent/children': typeof ParentChildrenRoute
+  '/parent/homework': typeof ParentHomeworkRoute
   '/student/attendance': typeof StudentAttendanceRoute
   '/student/fees': typeof StudentFeesRoute
+  '/student/homework': typeof StudentHomeworkRoute
+  '/student/library': typeof StudentLibraryRoute
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
@@ -575,6 +626,8 @@ export interface FileRoutesById {
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
+  '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -586,6 +639,7 @@ export interface FileRoutesById {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -634,8 +688,11 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
+    | '/student/library'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -643,6 +700,8 @@ export interface FileRouteTypes {
     | '/superadmin/admins'
     | '/superadmin/schools'
     | '/teacher/attendance'
+    | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -654,6 +713,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/teacher/homework/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -693,8 +753,11 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
+    | '/student/library'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -702,6 +765,8 @@ export interface FileRouteTypes {
     | '/superadmin/admins'
     | '/superadmin/schools'
     | '/teacher/attendance'
+    | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -713,6 +778,7 @@ export interface FileRouteTypes {
     | '/superadmin'
     | '/teacher'
     | '/transport'
+    | '/teacher/homework/$id'
   id:
     | '__root__'
     | '/'
@@ -759,8 +825,11 @@ export interface FileRouteTypes {
     | '/api/n8n-chat'
     | '/api/n8n-fetch'
     | '/parent/children'
+    | '/parent/homework'
     | '/student/attendance'
     | '/student/fees'
+    | '/student/homework'
+    | '/student/library'
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
@@ -768,6 +837,8 @@ export interface FileRouteTypes {
     | '/superadmin/admins'
     | '/superadmin/schools'
     | '/teacher/attendance'
+    | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -779,6 +850,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/teacher/homework/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1010,6 +1082,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherResultsRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/library': {
+      id: '/teacher/library'
+      path: '/library'
+      fullPath: '/teacher/library'
+      preLoaderRoute: typeof TeacherLibraryRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/homework': {
+      id: '/teacher/homework'
+      path: '/homework'
+      fullPath: '/teacher/homework'
+      preLoaderRoute: typeof TeacherHomeworkRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/attendance': {
       id: '/teacher/attendance'
       path: '/attendance'
@@ -1059,6 +1145,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentResultsRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/library': {
+      id: '/student/library'
+      path: '/library'
+      fullPath: '/student/library'
+      preLoaderRoute: typeof StudentLibraryRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/homework': {
+      id: '/student/homework'
+      path: '/homework'
+      fullPath: '/student/homework'
+      preLoaderRoute: typeof StudentHomeworkRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/fees': {
       id: '/student/fees'
       path: '/fees'
@@ -1072,6 +1172,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/attendance'
       preLoaderRoute: typeof StudentAttendanceRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/parent/homework': {
+      id: '/parent/homework'
+      path: '/homework'
+      fullPath: '/parent/homework'
+      preLoaderRoute: typeof ParentHomeworkRouteImport
+      parentRoute: typeof ParentRoute
     }
     '/parent/children': {
       id: '/parent/children'
@@ -1255,6 +1362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountantFeesRouteImport
       parentRoute: typeof AccountantRoute
     }
+    '/teacher/homework/$id': {
+      id: '/teacher/homework/$id'
+      path: '/$id'
+      fullPath: '/teacher/homework/$id'
+      preLoaderRoute: typeof TeacherHomeworkIdRouteImport
+      parentRoute: typeof TeacherHomeworkRoute
+    }
   }
 }
 
@@ -1326,11 +1440,13 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ParentRouteChildren {
   ParentChildrenRoute: typeof ParentChildrenRoute
+  ParentHomeworkRoute: typeof ParentHomeworkRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
 const ParentRouteChildren: ParentRouteChildren = {
   ParentChildrenRoute: ParentChildrenRoute,
+  ParentHomeworkRoute: ParentHomeworkRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 
@@ -1340,6 +1456,8 @@ const ParentRouteWithChildren =
 interface StudentRouteChildren {
   StudentAttendanceRoute: typeof StudentAttendanceRoute
   StudentFeesRoute: typeof StudentFeesRoute
+  StudentHomeworkRoute: typeof StudentHomeworkRoute
+  StudentLibraryRoute: typeof StudentLibraryRoute
   StudentResultsRoute: typeof StudentResultsRoute
   StudentTimetableRoute: typeof StudentTimetableRoute
   StudentTransportRoute: typeof StudentTransportRoute
@@ -1349,6 +1467,8 @@ interface StudentRouteChildren {
 const StudentRouteChildren: StudentRouteChildren = {
   StudentAttendanceRoute: StudentAttendanceRoute,
   StudentFeesRoute: StudentFeesRoute,
+  StudentHomeworkRoute: StudentHomeworkRoute,
+  StudentLibraryRoute: StudentLibraryRoute,
   StudentResultsRoute: StudentResultsRoute,
   StudentTimetableRoute: StudentTimetableRoute,
   StudentTransportRoute: StudentTransportRoute,
@@ -1386,8 +1506,22 @@ const SuperadminRouteWithChildren = SuperadminRoute._addFileChildren(
   SuperadminRouteChildren,
 )
 
+interface TeacherHomeworkRouteChildren {
+  TeacherHomeworkIdRoute: typeof TeacherHomeworkIdRoute
+}
+
+const TeacherHomeworkRouteChildren: TeacherHomeworkRouteChildren = {
+  TeacherHomeworkIdRoute: TeacherHomeworkIdRoute,
+}
+
+const TeacherHomeworkRouteWithChildren = TeacherHomeworkRoute._addFileChildren(
+  TeacherHomeworkRouteChildren,
+)
+
 interface TeacherRouteChildren {
   TeacherAttendanceRoute: typeof TeacherAttendanceRoute
+  TeacherHomeworkRoute: typeof TeacherHomeworkRouteWithChildren
+  TeacherLibraryRoute: typeof TeacherLibraryRoute
   TeacherResultsRoute: typeof TeacherResultsRoute
   TeacherTimetableRoute: typeof TeacherTimetableRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -1395,6 +1529,8 @@ interface TeacherRouteChildren {
 
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherAttendanceRoute: TeacherAttendanceRoute,
+  TeacherHomeworkRoute: TeacherHomeworkRouteWithChildren,
+  TeacherLibraryRoute: TeacherLibraryRoute,
   TeacherResultsRoute: TeacherResultsRoute,
   TeacherTimetableRoute: TeacherTimetableRoute,
   TeacherIndexRoute: TeacherIndexRoute,
