@@ -38,6 +38,7 @@ import { Route as TransportRoutesRouteImport } from './routes/transport.routes'
 import { Route as TransportAssignmentsRouteImport } from './routes/transport.assignments'
 import { Route as TeacherTimetableRouteImport } from './routes/teacher.timetable'
 import { Route as TeacherResultsRouteImport } from './routes/teacher.results'
+import { Route as TeacherLibraryRouteImport } from './routes/teacher.library'
 import { Route as TeacherHomeworkRouteImport } from './routes/teacher.homework'
 import { Route as TeacherAttendanceRouteImport } from './routes/teacher.attendance'
 import { Route as SuperadminSchoolsRouteImport } from './routes/superadmin.schools'
@@ -221,6 +222,11 @@ const TeacherTimetableRoute = TeacherTimetableRouteImport.update({
 const TeacherResultsRoute = TeacherResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherLibraryRoute = TeacherLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherHomeworkRoute = TeacherHomeworkRouteImport.update({
@@ -476,6 +482,7 @@ export interface FileRoutesByFullPath {
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -539,6 +546,7 @@ export interface FileRoutesByTo {
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -610,6 +618,7 @@ export interface FileRoutesById {
   '/superadmin/schools': typeof SuperadminSchoolsRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/homework': typeof TeacherHomeworkRouteWithChildren
+  '/teacher/library': typeof TeacherLibraryRoute
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
@@ -682,6 +691,7 @@ export interface FileRouteTypes {
     | '/superadmin/schools'
     | '/teacher/attendance'
     | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -745,6 +755,7 @@ export interface FileRouteTypes {
     | '/superadmin/schools'
     | '/teacher/attendance'
     | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -815,6 +826,7 @@ export interface FileRouteTypes {
     | '/superadmin/schools'
     | '/teacher/attendance'
     | '/teacher/homework'
+    | '/teacher/library'
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
@@ -1056,6 +1068,13 @@ declare module '@tanstack/react-router' {
       path: '/results'
       fullPath: '/teacher/results'
       preLoaderRoute: typeof TeacherResultsRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/library': {
+      id: '/teacher/library'
+      path: '/library'
+      fullPath: '/teacher/library'
+      preLoaderRoute: typeof TeacherLibraryRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/homework': {
@@ -1481,6 +1500,7 @@ const TeacherHomeworkRouteWithChildren = TeacherHomeworkRoute._addFileChildren(
 interface TeacherRouteChildren {
   TeacherAttendanceRoute: typeof TeacherAttendanceRoute
   TeacherHomeworkRoute: typeof TeacherHomeworkRouteWithChildren
+  TeacherLibraryRoute: typeof TeacherLibraryRoute
   TeacherResultsRoute: typeof TeacherResultsRoute
   TeacherTimetableRoute: typeof TeacherTimetableRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -1489,6 +1509,7 @@ interface TeacherRouteChildren {
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherAttendanceRoute: TeacherAttendanceRoute,
   TeacherHomeworkRoute: TeacherHomeworkRouteWithChildren,
+  TeacherLibraryRoute: TeacherLibraryRoute,
   TeacherResultsRoute: TeacherResultsRoute,
   TeacherTimetableRoute: TeacherTimetableRoute,
   TeacherIndexRoute: TeacherIndexRoute,
