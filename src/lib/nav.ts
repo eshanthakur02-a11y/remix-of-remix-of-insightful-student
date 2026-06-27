@@ -46,8 +46,10 @@ export const adminNav: NavItem[] = [
 export const teacherNav: NavItem[] = [
   { to: "/teacher", label: "Dashboard", icon: LayoutDashboard },
   { to: "/teacher/attendance", label: "Attendance", icon: UserCheck },
+  { to: "/teacher/homework", label: "Homework", icon: NotebookPen },
   { to: "/teacher/results", label: "Exam Results", icon: ClipboardList },
   { to: "/teacher/timetable", label: "Timetable", icon: Calendar },
+  { to: "/teacher/library", label: "Library", icon: Library },
   { to: "/messages", label: "Messages", icon: MessageSquare },
 ];
 
@@ -55,7 +57,9 @@ export const studentNav: NavItem[] = [
   { to: "/student", label: "Dashboard", icon: LayoutDashboard },
   { to: "/student/timetable", label: "Timetable", icon: Calendar },
   { to: "/student/attendance", label: "My Attendance", icon: UserCheck },
+  { to: "/student/homework", label: "Homework", icon: NotebookPen },
   { to: "/student/results", label: "My Results", icon: ClipboardList },
+  { to: "/student/library", label: "Library", icon: Library },
   { to: "/student/fees", label: "My Fees", icon: Wallet },
   { to: "/student/transport", label: "Transport", icon: Bus },
   { to: "/messages", label: "Messages", icon: MessageSquare },
@@ -64,6 +68,7 @@ export const studentNav: NavItem[] = [
 export const parentNav: NavItem[] = [
   { to: "/parent", label: "Dashboard", icon: LayoutDashboard },
   { to: "/parent/children", label: "My Children", icon: Heart },
+  { to: "/parent/homework", label: "Homework", icon: NotebookPen },
   { to: "/messages", label: "Messages", icon: MessageSquare },
 ];
 
