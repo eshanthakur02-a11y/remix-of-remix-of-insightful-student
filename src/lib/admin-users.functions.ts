@@ -271,6 +271,7 @@ export const setStudentLoginEnabled = createServerFn({ method: "POST" })
     const features = { ...((sch?.features as any) ?? {}), student_login: data.enabled };
     const { error } = await supabaseAdmin.from("schools").update({ features }).eq("id", data.school_id);
     if (error) throw error;
+    await audit(context, "school.student_login_toggled", "school", data.school_id, { enabled: data.enabled }, data.school_id);
     return { ok: true };
   });
 
