@@ -49,7 +49,7 @@ export function ResultsPanel({ studentId }: { studentId: string }) {
   useEffect(() => {
     if (!studentId) return;
     supabase.from("exam_results")
-      .select("marks_obtained,max_marks,grade,subjects(name),exams(name)")
+      .select("marks,max_marks,subjects(name),exams(name)")
       .eq("student_id", studentId).order("created_at", { ascending: false }).limit(8)
       .then(({ data }) => setRows(data ?? []));
   }, [studentId]);
