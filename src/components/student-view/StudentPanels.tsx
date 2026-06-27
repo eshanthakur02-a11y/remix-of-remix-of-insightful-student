@@ -90,10 +90,11 @@ export function TimetablePanel({ studentId }: { studentId: string }) {
     (async () => {
       const { data: st } = await supabase.from("students").select("class_id,section_id").eq("id", studentId).single();
       if (!st?.class_id) { setRows([]); return; }
-      const { data } = await supabase.from("timetable")
-        .select("day,period,start_time,end_time,subjects(name),teachers(full_name)")
-        .eq("class_id", st.class_id).eq("section_id", st.section_id ?? "")
-        .order("day").order("period");
+      let q = supabase.from("timetable")
+        .select("day_of_week,start_time,end_time,subjects(name),teachers(full_name)")
+        .eq("class_id", st.class_id);
+      if (st.section_id) q = q.eq("section_id", st.section_id);
+      const { data } = await q.order("day_of_week").order("start_time");
       setRows(data ?? []);
     })();
   }, [studentId]);
