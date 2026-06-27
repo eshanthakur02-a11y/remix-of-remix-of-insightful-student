@@ -68,7 +68,7 @@ function AdminDashboard() {
         supabase.from("teachers").select("id,full_name,employee_no,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("announcements").select("id,title,body,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("attendance").select("date,status").gte("date", start14.toISOString().slice(0, 10)),
-        supabase.from("fee_payments").select("amount,paid_at").gte("paid_at", new Date(new Date().getFullYear(), new Date().getMonth() - 5, 1).toISOString()),
+        supabase.from("fee_payments").select("amount_paid,paid_at").gte("paid_at", new Date(new Date().getFullYear(), new Date().getMonth() - 5, 1).toISOString()),
         supabase.from("exams").select("id,exam_date").gte("exam_date", today),
       ]);
       if (cancel) return;
@@ -107,7 +107,7 @@ function AdminDashboard() {
       })));
 
       // fees: this month + 6-month trend
-      const feeRows = (fee.data ?? []) as { amount: number; paid_at: string }[];
+      const feeRows = (fee.data ?? []) as { amount_paid: number; paid_at: string }[];
       const monthly: Record<string, number> = {};
       for (let i = 5; i >= 0; i--) {
         const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
@@ -117,8 +117,8 @@ function AdminDashboard() {
       const thisKey = new Date().toISOString().slice(0, 7);
       for (const f of feeRows) {
         const k = f.paid_at?.slice(0, 7);
-        if (k && k in monthly) monthly[k] += Number(f.amount) || 0;
-        if (k === thisKey) thisMonth += Number(f.amount) || 0;
+        if (k && k in monthly) monthly[k] += Number(f.amount_paid) || 0;
+        if (k === thisKey) thisMonth += Number(f.amount_paid) || 0;
       }
       setFeesThisMonth(thisMonth);
       setFeeTrend(Object.entries(monthly).map(([m, amount]) => ({
