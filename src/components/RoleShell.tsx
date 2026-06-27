@@ -3,6 +3,7 @@ import { GraduationCap, LogOut, Moon, Sun, type LucideIcon } from "lucide-react"
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
+import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABEL, signOut, useAuth, type AppRole } from "@/lib/auth";
 
 export type NavItem = { to: string; label: string; icon: LucideIcon };
