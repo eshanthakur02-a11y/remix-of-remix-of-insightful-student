@@ -450,13 +450,13 @@ export const createSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({
     name: z.string().trim().min(1).max(60),
-    starts_on: z.string(), ends_on: z.string(),
+    start_date: z.string(), end_date: z.string(),
   }).parse(d))
   .handler(async ({ data, context }) => {
     const schoolId = await assertSchoolAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin.from("academic_sessions")
-      .insert({ school_id: schoolId, name: data.name, starts_on: data.starts_on, ends_on: data.ends_on })
+      .insert({ school_id: schoolId, name: data.name, start_date: data.start_date, end_date: data.end_date })
       .select("id").single();
     if (error) throw error;
     await audit(context, "session.created", "session", row.id, { name: data.name }, schoolId);
@@ -468,7 +468,7 @@ export const updateSession = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({
     id: z.string().uuid(),
     name: z.string().trim().min(1).max(60),
-    starts_on: z.string(), ends_on: z.string(),
+    start_date: z.string(), end_date: z.string(),
   }).parse(d))
   .handler(async ({ data, context }) => {
     const schoolId = await assertSchoolAdmin(context);
@@ -476,7 +476,7 @@ export const updateSession = createServerFn({ method: "POST" })
     const { data: row } = await supabaseAdmin.from("academic_sessions").select("school_id").eq("id", data.id).single();
     if (row?.school_id !== schoolId) throw new Error("Forbidden");
     const { error } = await supabaseAdmin.from("academic_sessions")
-      .update({ name: data.name, starts_on: data.starts_on, ends_on: data.ends_on }).eq("id", data.id);
+      .update({ name: data.name, start_date: data.start_date, end_date: data.end_date }).eq("id", data.id);
     if (error) throw error;
     await audit(context, "session.updated", "session", data.id, { name: data.name }, schoolId);
     return { ok: true };
@@ -487,7 +487,7 @@ export const activateSession = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const schoolId = await assertSchoolAdmin(context);
-    const { error } = await context.supabase.rpc("set_current_session", { _id: data.id });
+    const { error } = await context.supabase.rpc("set_current_session", { _session_id: data.id });
     if (error) throw error;
     await audit(context, "session.activated", "session", data.id, {}, schoolId);
     return { ok: true };
@@ -501,8 +501,9 @@ export const setSessionStatus = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin.from("academic_sessions").select("school_id").eq("id", data.id).single();
     if (row?.school_id !== schoolId) throw new Error("Forbidden");
-    const patch: Record<string, unknown> = { status: data.status };
-    if (data.status !== "active") patch.is_current = false;
+    const patch = data.status === "active"
+      ? { status: data.status }
+      : { status: data.status, is_current: false };
     const { error } = await supabaseAdmin.from("academic_sessions").update(patch).eq("id", data.id);
     if (error) throw error;
     await audit(context, `session.${data.status}`, "session", data.id, {}, schoolId);
