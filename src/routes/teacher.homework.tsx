@@ -36,7 +36,7 @@ function Page() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState<Hw | null>(null);
-  const [confirmDel, setConfirmDel] = useState<Hw | null>(null);
+  
   const [filterStatus, setFilterStatus] = useState<string>("active");
   const [filterClass, setFilterClass] = useState<string>("all");
 
