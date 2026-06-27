@@ -6,8 +6,9 @@ export type HwAttachment = { path: string; name: string; size?: number };
 export async function audit(action: string, entity_id: string | null, meta: Record<string, unknown> = {}) {
   try {
     await supabase.rpc("log_audit", {
-      _action: action, _entity: "homework", _entity_id: entity_id,
-      _school_id: null, _meta: meta,
+      _action: action, _entity: "homework",
+      _entity_id: entity_id ?? undefined,
+      _meta: meta as never,
     });
   } catch { /* swallow */ }
 }
@@ -22,7 +23,7 @@ export async function notifyHomeworkAssigned(homeworkId: string, sectionId: stri
       _user_id: s.user_id, _kind: "homework",
       _title: "New homework assigned",
       _body: title,
-      _school_id: schoolId,
+      _school_id: schoolId ?? undefined,
     })
   ));
   await audit("homework.assigned", homeworkId, { section_id: sectionId });
