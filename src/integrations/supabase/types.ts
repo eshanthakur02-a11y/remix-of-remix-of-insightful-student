@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_sessions: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          id: string
+          is_current: boolean
+          name: string
+          school_id: string
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_current?: boolean
+          name: string
+          school_id: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          is_current?: boolean
+          name?: string
+          school_id?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academic_sessions_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       announcements: {
         Row: {
           audience: string
@@ -83,6 +127,47 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          entity: string | null
+          entity_id: string | null
+          id: string
+          meta: Json
+          school_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          meta?: Json
+          school_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          meta?: Json
+          school_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
             referencedColumns: ["id"]
           },
         ]
@@ -330,6 +415,47 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          read_at: string | null
+          school_id: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          read_at?: string | null
+          school_id?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          read_at?: string | null
+          school_id?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parent_students: {
         Row: {
           created_at: string
@@ -450,7 +576,9 @@ export type Database = {
           address: string | null
           code: string | null
           created_at: string
+          current_session_id: string | null
           email: string | null
+          features: Json
           id: string
           name: string
           phone: string | null
@@ -461,7 +589,9 @@ export type Database = {
           address?: string | null
           code?: string | null
           created_at?: string
+          current_session_id?: string | null
           email?: string | null
+          features?: Json
           id?: string
           name: string
           phone?: string | null
@@ -472,14 +602,24 @@ export type Database = {
           address?: string | null
           code?: string | null
           created_at?: string
+          current_session_id?: string | null
           email?: string | null
+          features?: Json
           id?: string
           name?: string
           phone?: string | null
           status?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "schools_current_session_fkey"
+            columns: ["current_session_id"]
+            isOneToOne: false
+            referencedRelation: "academic_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sections: {
         Row: {
@@ -660,32 +800,62 @@ export type Database = {
       }
       teacher_assignments: {
         Row: {
+          class_id: string | null
           created_at: string
           id: string
+          school_id: string | null
           section_id: string
+          session_id: string | null
           subject_id: string | null
           teacher_id: string
         }
         Insert: {
+          class_id?: string | null
           created_at?: string
           id?: string
+          school_id?: string | null
           section_id: string
+          session_id?: string | null
           subject_id?: string | null
           teacher_id: string
         }
         Update: {
+          class_id?: string | null
           created_at?: string
           id?: string
+          school_id?: string | null
           section_id?: string
+          session_id?: string | null
           subject_id?: string | null
           teacher_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "teacher_assignments_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_assignments_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "teacher_assignments_section_id_fkey"
             columns: ["section_id"]
             isOneToOne: false
             referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_assignments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "academic_sessions"
             referencedColumns: ["id"]
           },
           {
@@ -943,6 +1113,14 @@ export type Database = {
     Functions: {
       auth_role: { Args: never; Returns: string }
       auth_school_id: { Args: never; Returns: string }
+      delete_class_if_unreferenced: {
+        Args: { _id: string }
+        Returns: undefined
+      }
+      delete_section_if_unreferenced: {
+        Args: { _id: string }
+        Returns: undefined
+      }
       get_user_school: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -954,6 +1132,10 @@ export type Database = {
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       parent_has_student: {
         Args: { _student_id: string; _user_id: string }
+        Returns: boolean
+      }
+      school_feature: {
+        Args: { _key: string; _school_id: string }
         Returns: boolean
       }
     }

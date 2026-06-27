@@ -3,6 +3,7 @@ import { GraduationCap, LogOut, Moon, Sun, type LucideIcon } from "lucide-react"
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
+import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABEL, signOut, useAuth, type AppRole } from "@/lib/auth";
 
 export type NavItem = { to: string; label: string; icon: LucideIcon };
@@ -19,7 +20,7 @@ export function RoleShell({
   const { theme, toggle } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, role: currentRole, profile, loading, profileLoading } = useAuth();
+  const { user, role: currentRole, schoolId, profile, loading, profileLoading } = useAuth();
 
   useEffect(() => {
     if (loading) return;
@@ -32,6 +33,16 @@ export function RoleShell({
     }
     if (currentRole !== role) navigate({ to: "/access-denied" });
   }, [user, currentRole, profile, loading, profileLoading, role, navigate]);
+
+  // Re-check school suspension on every nav change so suspensions take effect mid-session.
+  useEffect(() => {
+    if (!user || currentRole === "super_admin" || !schoolId) return;
+    supabase.from("schools").select("status").eq("id", schoolId).maybeSingle().then(({ data }) => {
+      if (data?.status === "suspended") {
+        signOut();
+      }
+    });
+  }, [location.pathname, user, currentRole, schoolId]);
 
   if (loading || profileLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Loading…</div>;
