@@ -65,7 +65,7 @@ export function ResultsPanel({ studentId }: { studentId: string }) {
                 <div>{r.subjects?.name ?? "Subject"}</div>
                 <div className="text-xs text-muted-foreground">{r.exams?.name ?? "Exam"}</div>
               </div>
-              <div className="font-mono">{r.marks_obtained ?? "—"}/{r.max_marks ?? "—"} {r.grade && <span className="ml-2 text-xs">({r.grade})</span>}</div>
+              <div className="font-mono">{r.marks ?? "—"}/{r.max_marks ?? "—"}</div>
             </li>
           ))}
         </ul>
