@@ -213,6 +213,11 @@ export const createStudentWithParent = createServerFn({ method: "POST" })
       .insert({ parent_id: parentId, student_id: studentRow.id, relationship: data.relationship ?? null });
     if (linkErr && !linkErr.message.includes("duplicate")) throw linkErr;
 
+    await audit(context, "student.created", "student", studentRow.id, {
+      admission_no: data.admission_no, parent_email: data.parent_email,
+    }, schoolId);
+    await audit(context, "parent.linked", "parent", parentId, { student_id: studentRow.id }, schoolId);
+
     return {
       studentId: studentRow.id,
       parentId,
