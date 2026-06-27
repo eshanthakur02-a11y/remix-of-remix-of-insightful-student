@@ -30,6 +30,23 @@ async function assertSuperAdmin(context: any) {
   if (!isSuper) throw new Error("Forbidden: super_admin only");
 }
 
+// Best-effort audit log; never throws (auditing must never break a write).
+async function audit(
+  context: any,
+  action: string,
+  entity: string,
+  entity_id: string | null,
+  meta: Record<string, unknown> = {},
+  school_id: string | null = null,
+) {
+  try {
+    await context.supabase.rpc("log_audit", {
+      _action: action, _entity: entity, _entity_id: entity_id,
+      _school_id: school_id, _meta: meta,
+    });
+  } catch { /* swallow */ }
+}
+
 // ---------- Super Admin: create a School Admin (invite via email) ------------
 export const createSchoolAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
