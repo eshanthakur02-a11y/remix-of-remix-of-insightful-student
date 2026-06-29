@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { StudentPanels } from "@/components/student-view/StudentPanels";
@@ -8,13 +8,16 @@ export const Route = createFileRoute("/student/")({ component: Page });
 
 function Page() {
   const { user } = useAuth();
-  const [student, setStudent] = useState<{ id: string; full_name: string; admission_no: string | null } | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    supabase.from("students").select("id,full_name,admission_no").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => setStudent(data ?? null));
-  }, [user]);
+  const { data: student } = useQuery({
+    queryKey: ["my-student", user?.id],
+    enabled: !!user,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from("students")
+        .select("id,full_name,admission_no").eq("user_id", user!.id).maybeSingle();
+      return data ?? null;
+    },
+  });
 
   return (
     <>
