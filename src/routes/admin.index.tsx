@@ -7,10 +7,8 @@ import {
 import {
   Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
-import { RoleShell } from "@/components/RoleShell";
 import { StatCard } from "@/components/StatCard";
 import { PageHeader } from "@/components/PageHeader";
-import { adminNav } from "@/lib/nav";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -135,7 +133,7 @@ function AdminDashboard() {
   const money = (n: number) => new Intl.NumberFormat(undefined, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <PageHeader
         title={`Welcome back, ${name}`}
         description="Live snapshot of your school — updates as you add data."
@@ -266,7 +264,7 @@ function AdminDashboard() {
         <QuickAction to="/admin/exams" label="Schedule exam" icon={ClipboardList} />
         <QuickAction to="/admin/attendance" label="Attendance register" icon={UserCheck} />
       </div>
-    </RoleShell>
+    </>
   );
 }
 

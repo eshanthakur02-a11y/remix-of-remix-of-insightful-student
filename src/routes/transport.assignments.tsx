@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { transportNav } from "@/lib/nav";
 import { CrudTable } from "@/components/CrudTable";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,7 +13,7 @@ function Page() {
     supabase.from("transport_routes").select("id,name").then(({ data }) => setRoutes(data ?? []));
   }, []);
   return (
-    <RoleShell role="transport" navItems={transportNav}>
+    <>
       <CrudTable title="Student Assignments" table="student_transport"
         columns={[
           { key: "student_id", label: "Student", render: (r) => students.find((s) => s.id === r.student_id)?.full_name ?? "—" },
@@ -28,6 +26,6 @@ function Page() {
           { key: "pickup_point", label: "Pickup point" },
         ]}
       />
-    </RoleShell>
+    </>
   );
 }

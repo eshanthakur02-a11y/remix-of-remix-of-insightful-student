@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Upload, Download, Calendar } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
 import { PageHeader } from "@/components/PageHeader";
-import { studentNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -80,7 +78,7 @@ function Page() {
   async function openFile(p: HwAttachment) { window.open(await getSignedUrl("assignments", p.path), "_blank"); }
 
   return (
-    <RoleShell role="student" navItems={studentNav}>
+    <>
       <PageHeader title="My Homework" description="Assigned work and submissions." />
       {loading ? <div className="text-muted-foreground">Loading…</div>
         : list.length === 0 ? <div className="glass-card p-8 text-center text-muted-foreground">No active homework right now.</div>
@@ -121,6 +119,6 @@ function Page() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </RoleShell>
+    </>
   );
 }

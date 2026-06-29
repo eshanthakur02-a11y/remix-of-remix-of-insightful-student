@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { parentNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { StudentPanels } from "@/components/student-view/StudentPanels";
@@ -33,7 +31,7 @@ function Page() {
   const active = children.find((c) => c.id === activeId);
 
   return (
-    <RoleShell role="parent" navItems={parentNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-1">Parent Dashboard</h1>
       <p className="text-sm text-muted-foreground mb-6">View your child's attendance, results, and timetable.</p>
 
@@ -64,6 +62,6 @@ function Page() {
           <StudentPanels studentId={active.id} />
         </>
       )}
-    </RoleShell>
+    </>
   );
 }

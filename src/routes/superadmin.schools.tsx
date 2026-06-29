@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Plus, ShieldOff, ShieldCheck, Loader2 } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
-import { superAdminNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,7 +51,7 @@ function Page() {
   }
 
   return (
-    <RoleShell role="super_admin" navItems={superAdminNav}>
+    <>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Schools</h1>
@@ -110,6 +108,6 @@ function Page() {
           </tbody>
         </table>
       </div>
-    </RoleShell>
+    </>
   );
 }

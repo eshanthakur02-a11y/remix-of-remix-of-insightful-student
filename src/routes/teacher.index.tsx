@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { RoleShell } from "@/components/RoleShell";
 import { teacherNav } from "@/lib/nav";
-
 export const Route = createFileRoute("/teacher/")({ component: Page });
 
 function Page() {
   return (
-    <RoleShell role="teacher" navItems={teacherNav}>
+    <>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Teacher Dashboard</h1>
         <p className="text-sm text-muted-foreground mt-1">Mark attendance, enter results, view timetable.</p>
@@ -21,6 +19,6 @@ function Page() {
           </Link>
         ))}
       </div>
-    </RoleShell>
+    </>
   );
 }

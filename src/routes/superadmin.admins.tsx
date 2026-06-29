@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { RoleShell } from "@/components/RoleShell";
-import { superAdminNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,7 +54,7 @@ function Page() {
   }
 
   return (
-    <RoleShell role="super_admin" navItems={superAdminNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-1">School Admins</h1>
       <p className="text-sm text-muted-foreground mb-6">Invite a new School Admin by email and assign them to a school.</p>
 
@@ -85,6 +83,6 @@ function Page() {
           {admins.length === 0 && <div className="text-sm text-muted-foreground">No school admins yet.</div>}
         </div>
       </div>
-    </RoleShell>
+    </>
   );
 }

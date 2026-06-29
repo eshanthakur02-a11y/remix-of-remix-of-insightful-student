@@ -1,13 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { CrudTable } from "@/components/CrudTable";
 
 export const Route = createFileRoute("/admin/transport")({ component: Page });
 
 function Page() {
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <CrudTable
         title="Transport Routes"
         table="transport_routes"
@@ -24,6 +22,6 @@ function Page() {
           { key: "driver_phone", label: "Driver phone" },
         ]}
       />
-    </RoleShell>
+    </>
   );
 }

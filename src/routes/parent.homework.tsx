@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Calendar, Download } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
 import { PageHeader } from "@/components/PageHeader";
-import { parentNav } from "@/lib/nav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -60,7 +58,7 @@ function Page() {
   async function openFile(p: HwAttachment) { window.open(await getSignedUrl("assignments", p.path), "_blank"); }
 
   return (
-    <RoleShell role="parent" navItems={parentNav}>
+    <>
       <PageHeader
         title="Child's Homework"
         description="Stay on top of due dates and submissions."
@@ -92,6 +90,6 @@ function Page() {
           })}
         </div>
       }
-    </RoleShell>
+    </>
   );
 }

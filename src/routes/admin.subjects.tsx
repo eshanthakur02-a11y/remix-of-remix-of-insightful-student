@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Archive, ArchiveRestore, BookOpen, Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -93,7 +91,7 @@ function Page() {
   }
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Subjects</h1>
@@ -190,6 +188,6 @@ function Page() {
           </form>
         </DialogContent>
       </Dialog>
-    </RoleShell>
+    </>
   );
 }
