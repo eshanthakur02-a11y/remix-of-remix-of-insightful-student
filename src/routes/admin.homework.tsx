@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
 import { PageHeader } from "@/components/PageHeader";
 import { DataTable } from "@/components/DataTable";
-import { adminNav } from "@/lib/nav";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -58,7 +56,7 @@ function Page() {
   const active = rows.filter((r) => r.status === "active").length;
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <PageHeader title="Homework" description="Read-only overview across the school." />
       <div className="grid sm:grid-cols-3 gap-3 mb-4">
         <div className="glass-card p-4"><div className="text-xs text-muted-foreground">Active homework</div><div className="text-2xl font-semibold">{active}</div></div>
@@ -77,6 +75,6 @@ function Page() {
           { key: "status", label: "Status", render: (r) => <Badge variant={r.status === "archived" ? "secondary" : "default"}>{r.status}</Badge> },
         ]}
       />
-    </RoleShell>
+    </>
   );
 }

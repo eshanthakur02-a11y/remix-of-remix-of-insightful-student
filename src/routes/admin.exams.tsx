@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { CrudTable } from "@/components/CrudTable";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -12,7 +10,7 @@ function Page() {
   useEffect(() => { supabase.from("classes").select("id,name").then(({ data }) => setClasses(data ?? [])); }, []);
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <CrudTable
         title="Exams"
         table="exams"
@@ -27,6 +25,6 @@ function Page() {
           { key: "class_id", label: "Class", type: "select", options: classes.map((c) => ({ value: c.id, label: c.name })) },
         ]}
       />
-    </RoleShell>
+    </>
   );
 }

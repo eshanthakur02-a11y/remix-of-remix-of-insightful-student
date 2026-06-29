@@ -1,9 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Download } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
 import { PageHeader } from "@/components/PageHeader";
-import { teacherNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -73,7 +71,7 @@ function Page() {
   const submitted = students.filter((s) => subs[s.id]).length;
 
   return (
-    <RoleShell role="teacher" navItems={teacherNav}>
+    <>
       <Button asChild variant="ghost" size="sm" className="mb-2"><Link to="/teacher/homework"><ArrowLeft className="h-4 w-4 mr-1" /> Back</Link></Button>
       <PageHeader title={hw?.title ?? "Homework"} description={hw?.description ?? undefined} />
 
@@ -125,6 +123,6 @@ function Page() {
           </tbody>
         </table>
       </div>
-    </RoleShell>
+    </>
   );
 }

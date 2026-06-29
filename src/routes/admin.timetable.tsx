@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { CrudTable } from "@/components/CrudTable";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,7 +23,7 @@ function Page() {
   }, []);
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <CrudTable
         title="Timetable"
         table="timetable"
@@ -48,6 +46,6 @@ function Page() {
           { key: "end_time", label: "End time", type: "time", required: true },
         ]}
       />
-    </RoleShell>
+    </>
   );
 }

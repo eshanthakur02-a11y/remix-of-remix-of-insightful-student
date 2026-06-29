@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { studentNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
@@ -23,7 +21,7 @@ function Page() {
   }, [user]);
 
   return (
-    <RoleShell role="student" navItems={studentNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-4">My Attendance</h1>
       <div className="grid grid-cols-4 gap-3 mb-4">
         {(["present", "absent", "late", "leave"] as const).map((k) => (
@@ -42,6 +40,6 @@ function Page() {
           </tbody>
         </table>
       </div>
-    </RoleShell>
+    </>
   );
 }

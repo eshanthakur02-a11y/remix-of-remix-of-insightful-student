@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { parentNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/parent/children")({ component: Page });
@@ -17,7 +15,7 @@ function Page() {
     })();
   }, []);
   return (
-    <RoleShell role="parent" navItems={parentNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-1">My Children</h1>
       <p className="text-sm text-muted-foreground mb-6">Profiles linked to your account.</p>
       <div className="glass-card p-5 space-y-2">
@@ -29,6 +27,6 @@ function Page() {
         ))}
         {rows.length === 0 && <div className="text-sm text-muted-foreground">No children linked.</div>}
       </div>
-    </RoleShell>
+    </>
   );
 }

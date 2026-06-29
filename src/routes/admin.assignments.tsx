@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { UserCog } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { TeacherAssignmentsDialog } from "@/components/TeacherAssignmentsDialog";
@@ -37,7 +35,7 @@ function Page() {
   useEffect(() => { load(); }, []);
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Teacher Assignments</h1>
@@ -74,6 +72,6 @@ function Page() {
       </div>
 
       {active && <TeacherAssignmentsDialog teacher={active} onOpenChange={(o) => { if (!o) { setActive(null); load(); } }} />}
-    </RoleShell>
+    </>
   );
 }

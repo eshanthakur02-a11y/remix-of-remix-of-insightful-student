@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Building2, Users, ShieldCheck } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
 import { StatCard } from "@/components/StatCard";
-import { superAdminNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/superadmin/")({ component: Page });
@@ -21,7 +19,7 @@ function Page() {
     })();
   }, []);
   return (
-    <RoleShell role="super_admin" navItems={superAdminNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-1">Super Admin</h1>
       <p className="text-sm text-muted-foreground mb-6">Manage all schools and platform-wide administrators.</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -29,6 +27,6 @@ function Page() {
         <StatCard label="School Admins" value={counts.admins} icon={ShieldCheck} />
         <StatCard label="Total Users" value={counts.users} icon={Users} />
       </div>
-    </RoleShell>
+    </>
   );
 }

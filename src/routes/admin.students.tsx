@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { KeyRound, Loader2, Plus } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
-import { adminNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -93,7 +91,7 @@ function Page() {
   }
 
   return (
-    <RoleShell role="school_admin" navItems={adminNav}>
+    <>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Students</h1>
@@ -164,6 +162,6 @@ function Page() {
       </div>
 
       <CredentialsModal open={!!creds} onOpenChange={(o) => !o && setCreds(null)} creds={creds ?? []} />
-    </RoleShell>
+    </>
   );
 }

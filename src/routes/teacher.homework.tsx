@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Plus, Archive, Trash2, Pencil, ExternalLink } from "lucide-react";
-import { RoleShell } from "@/components/RoleShell";
 import { PageHeader } from "@/components/PageHeader";
 import { DataTable } from "@/components/DataTable";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
@@ -12,7 +11,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { teacherNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 import { audit, notifyHomeworkAssigned, uploadHomeworkAttachment, type HwAttachment } from "@/lib/homework";
 import { toast } from "sonner";
@@ -141,7 +139,7 @@ function Page() {
   );
 
   return (
-    <RoleShell role="teacher" navItems={teacherNav}>
+    <>
       <PageHeader
         title="Homework"
         description="Create, track and grade homework you assign."
@@ -237,6 +235,6 @@ function Page() {
           </form>
         </DialogContent>
       </Dialog>
-    </RoleShell>
+    </>
   );
 }

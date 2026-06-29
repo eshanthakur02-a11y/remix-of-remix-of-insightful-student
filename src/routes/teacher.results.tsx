@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { teacherNav } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,7 +43,7 @@ function Page() {
   }
 
   return (
-    <RoleShell role="teacher" navItems={teacherNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-4">Enter Exam Results</h1>
       <div className="glass-card p-4 grid sm:grid-cols-4 gap-3 mb-4">
         <div><Label>Exam</Label>
@@ -77,6 +75,6 @@ function Page() {
           <div className="p-4 border-t border-border flex justify-end"><Button onClick={save}>Save Results</Button></div>
         </div>
       )}
-    </RoleShell>
+    </>
   );
 }

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { studentNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
@@ -22,7 +20,7 @@ function Page() {
   }, [user]);
 
   return (
-    <RoleShell role="student" navItems={studentNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-4">Transport</h1>
       {!info ? <div className="glass-card p-6 text-sm text-muted-foreground">No transport assigned.</div>
       : <div className="glass-card p-6 space-y-2 text-sm">
@@ -31,6 +29,6 @@ function Page() {
         <div><span className="text-muted-foreground">Driver:</span> {info.transport_routes?.driver_name ?? "—"} ({info.transport_routes?.driver_phone ?? "—"})</div>
         <div><span className="text-muted-foreground">Pickup:</span> {info.pickup_point ?? "—"}</div>
       </div>}
-    </RoleShell>
+    </>
   );
 }

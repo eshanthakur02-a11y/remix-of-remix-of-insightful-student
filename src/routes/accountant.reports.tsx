@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { RoleShell } from "@/components/RoleShell";
-import { accountantNav } from "@/lib/nav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/accountant/reports")({ component: Page });
@@ -15,12 +13,12 @@ function Page() {
     });
   }, []);
   return (
-    <RoleShell role="accountant" navItems={accountantNav}>
+    <>
       <h1 className="text-2xl font-semibold mb-4">Reports</h1>
       <div className="grid grid-cols-2 gap-4 max-w-md">
         <div className="glass-card p-5"><div className="text-xs uppercase text-muted-foreground">Total Collected</div><div className="text-3xl font-semibold">{totals.collected}</div></div>
         <div className="glass-card p-5"><div className="text-xs uppercase text-muted-foreground">Transactions</div><div className="text-3xl font-semibold">{totals.count}</div></div>
       </div>
-    </RoleShell>
+    </>
   );
 }
