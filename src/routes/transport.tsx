@@ -4,7 +4,7 @@ import { transportNav } from "@/lib/nav";
 
 export const Route = createFileRoute("/transport")({
   component: () => (
-    <RoleShell role="transport_manager" navItems={transportNav}>
+    <RoleShell role="transport" navItems={transportNav}>
       <Outlet />
     </RoleShell>
   ),
