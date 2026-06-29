@@ -46,6 +46,7 @@ export function useAuth() {
   const [role, setRole] = useState<AppRole | null>(null);
   const [schoolId, setSchoolId] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileInfo>({ status: null, schoolStatus: null });
+  const [resolvedUserId, setResolvedUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
 
@@ -63,9 +64,17 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
-    if (!user) { setRole(null); setSchoolId(null); setProfile({ status: null, schoolStatus: null }); return; }
+    if (!user) {
+      setRole(null);
+      setSchoolId(null);
+      setResolvedUserId(null);
+      setProfile({ status: null, schoolStatus: null });
+      setProfileLoading(false);
+      return;
+    }
     let cancel = false;
     setProfileLoading(true);
+    setResolvedUserId(null);
     (async () => {
       const [{ data: roleRow }, { data: prof }] = await Promise.all([
         supabase.from("user_roles").select("role,school_id").eq("user_id", user.id).limit(1).maybeSingle(),
@@ -82,12 +91,22 @@ export function useAuth() {
       setRole(r);
       setSchoolId(sid);
       setProfile({ status: (prof?.status as AccountStatus) ?? null, schoolStatus });
+      setResolvedUserId(user.id);
       setProfileLoading(false);
     })();
     return () => { cancel = true; };
   }, [user]);
 
-  return { session, user, role, schoolId, profile, loading, profileLoading };
+  const isProfileReady = !user || resolvedUserId === user.id;
+  return {
+    session,
+    user,
+    role: isProfileReady ? role : null,
+    schoolId: isProfileReady ? schoolId : null,
+    profile: isProfileReady ? profile : { status: null, schoolStatus: null },
+    loading,
+    profileLoading: profileLoading || !isProfileReady,
+  };
 }
 
 export async function signOut() {
