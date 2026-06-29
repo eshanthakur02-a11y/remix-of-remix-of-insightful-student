@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Users, GraduationCap, School, BookOpen, Bus, Megaphone, Wallet,
   ClipboardList, UserCheck, TrendingUp,
@@ -9,15 +9,11 @@ import {
 } from "recharts";
 import { StatCard } from "@/components/StatCard";
 import { PageHeader } from "@/components/PageHeader";
+import { StatCardSkeleton, ChartSkeleton, ListSkeleton } from "@/components/DashboardSkeleton";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
-
-type Counts = {
-  students: number; teachers: number; classes: number; sections: number;
-  subjects: number; routes: number; announcements: number; exams: number;
-};
 
 type RecentStudent = { id: string; full_name: string; admission_no: string | null; created_at: string };
 type RecentTeacher = { id: string; full_name: string; employee_no: string | null; created_at: string };
@@ -27,110 +23,117 @@ function fmt(d: string) {
   return new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" });
 }
 
+async function fetchAdminDashboard() {
+  const head = { count: "exact" as const, head: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const start14 = new Date(); start14.setDate(start14.getDate() - 13);
+
+  const [s, t, c, sec, sub, r, a, e, rs, rt, an, att, fee, exUp] = await Promise.all([
+    supabase.from("students").select("*", head),
+    supabase.from("teachers").select("*", head),
+    supabase.from("classes").select("*", head),
+    supabase.from("sections").select("*", head),
+    supabase.from("subjects").select("*", head),
+    supabase.from("transport_routes").select("*", head),
+    supabase.from("announcements").select("*", head),
+    supabase.from("exams").select("*", head),
+    supabase.from("students").select("id,full_name,admission_no,created_at").order("created_at", { ascending: false }).limit(5),
+    supabase.from("teachers").select("id,full_name,employee_no,created_at").order("created_at", { ascending: false }).limit(5),
+    supabase.from("announcements").select("id,title,body,created_at").order("created_at", { ascending: false }).limit(5),
+    supabase.from("attendance").select("date,status").gte("date", start14.toISOString().slice(0, 10)),
+    supabase.from("fee_payments").select("amount_paid,paid_at").gte("paid_at", new Date(new Date().getFullYear(), new Date().getMonth() - 5, 1).toISOString()),
+    supabase.from("exams").select("id,exam_date").gte("exam_date", today),
+  ]);
+
+  const counts = {
+    students: s.count ?? 0, teachers: t.count ?? 0, classes: c.count ?? 0, sections: sec.count ?? 0,
+    subjects: sub.count ?? 0, routes: r.count ?? 0, announcements: a.count ?? 0, exams: e.count ?? 0,
+  };
+
+  const attRows = (att.data ?? []) as { date: string; status: string }[];
+  const todays = attRows.filter((x) => x.date === today);
+  const presentToday = todays.filter((x) => x.status === "present").length;
+  const attendanceToday = {
+    pct: todays.length ? Math.round((presentToday / todays.length) * 100) : 0,
+    present: presentToday, total: todays.length,
+  };
+  const byDay: Record<string, { p: number; n: number }> = {};
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(); d.setDate(d.getDate() - (13 - i));
+    byDay[d.toISOString().slice(0, 10)] = { p: 0, n: 0 };
+  }
+  for (const row of attRows) {
+    if (!byDay[row.date]) continue;
+    byDay[row.date].n += 1;
+    if (row.status === "present") byDay[row.date].p += 1;
+  }
+  const attendanceTrend = Object.entries(byDay).map(([d, v]) => ({
+    day: new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" }),
+    pct: v.n ? Math.round((v.p / v.n) * 100) : 0,
+  }));
+
+  const feeRows = (fee.data ?? []) as { amount_paid: number; paid_at: string }[];
+  const monthly: Record<string, number> = {};
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
+    monthly[d.toISOString().slice(0, 7)] = 0;
+  }
+  let feesThisMonth = 0;
+  const thisKey = new Date().toISOString().slice(0, 7);
+  for (const f of feeRows) {
+    const k = f.paid_at?.slice(0, 7);
+    if (k && k in monthly) monthly[k] += Number(f.amount_paid) || 0;
+    if (k === thisKey) feesThisMonth += Number(f.amount_paid) || 0;
+  }
+  const feeTrend = Object.entries(monthly).map(([m, amount]) => ({
+    month: new Date(m + "-01").toLocaleDateString(undefined, { month: "short" }),
+    amount,
+  }));
+
+  return {
+    counts,
+    recentStudents: (rs.data ?? []) as RecentStudent[],
+    recentTeachers: (rt.data ?? []) as RecentTeacher[],
+    announcements: (an.data ?? []) as Announcement[],
+    attendanceToday, attendanceTrend, feesThisMonth, feeTrend,
+    upcomingExams: exUp.data?.length ?? 0,
+  };
+}
+
 function AdminDashboard() {
   const { user } = useAuth();
   const name = (user?.email?.split("@")[0] ?? "Admin").replace(/\b\w/g, (c) => c.toUpperCase());
 
-  const [counts, setCounts] = useState<Counts>({
-    students: 0, teachers: 0, classes: 0, sections: 0,
-    subjects: 0, routes: 0, announcements: 0, exams: 0,
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-dashboard"],
+    queryFn: fetchAdminDashboard,
+    staleTime: 60_000,
   });
-  const [recentStudents, setRecentStudents] = useState<RecentStudent[]>([]);
-  const [recentTeachers, setRecentTeachers] = useState<RecentTeacher[]>([]);
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [attendanceToday, setAttendanceToday] = useState<{ pct: number; present: number; total: number }>({ pct: 0, present: 0, total: 0 });
-  const [feesThisMonth, setFeesThisMonth] = useState(0);
-  const [upcomingExams, setUpcomingExams] = useState(0);
-  const [attendanceTrend, setAttendanceTrend] = useState<{ day: string; pct: number }[]>([]);
-  const [feeTrend, setFeeTrend] = useState<{ month: string; amount: number }[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancel = false;
-    (async () => {
-      const head = { count: "exact" as const, head: true };
-      const today = new Date().toISOString().slice(0, 10);
-      const startOfMonth = new Date(); startOfMonth.setDate(1); startOfMonth.setHours(0, 0, 0, 0);
-      const start14 = new Date(); start14.setDate(start14.getDate() - 13);
-
-      const [s, t, c, sec, sub, r, a, e, rs, rt, an, att, fee, exUp] = await Promise.all([
-        supabase.from("students").select("*", head),
-        supabase.from("teachers").select("*", head),
-        supabase.from("classes").select("*", head),
-        supabase.from("sections").select("*", head),
-        supabase.from("subjects").select("*", head),
-        supabase.from("transport_routes").select("*", head),
-        supabase.from("announcements").select("*", head),
-        supabase.from("exams").select("*", head),
-        supabase.from("students").select("id,full_name,admission_no,created_at").order("created_at", { ascending: false }).limit(5),
-        supabase.from("teachers").select("id,full_name,employee_no,created_at").order("created_at", { ascending: false }).limit(5),
-        supabase.from("announcements").select("id,title,body,created_at").order("created_at", { ascending: false }).limit(5),
-        supabase.from("attendance").select("date,status").gte("date", start14.toISOString().slice(0, 10)),
-        supabase.from("fee_payments").select("amount_paid,paid_at").gte("paid_at", new Date(new Date().getFullYear(), new Date().getMonth() - 5, 1).toISOString()),
-        supabase.from("exams").select("id,exam_date").gte("exam_date", today),
-      ]);
-      if (cancel) return;
-
-      setCounts({
-        students: s.count ?? 0, teachers: t.count ?? 0, classes: c.count ?? 0, sections: sec.count ?? 0,
-        subjects: sub.count ?? 0, routes: r.count ?? 0, announcements: a.count ?? 0, exams: e.count ?? 0,
-      });
-      setRecentStudents((rs.data ?? []) as RecentStudent[]);
-      setRecentTeachers((rt.data ?? []) as RecentTeacher[]);
-      setAnnouncements((an.data ?? []) as Announcement[]);
-      setUpcomingExams(exUp.data?.length ?? 0);
-
-      // attendance: today + 14d trend
-      const attRows = (att.data ?? []) as { date: string; status: string }[];
-      const todays = attRows.filter((x) => x.date === today);
-      const presentToday = todays.filter((x) => x.status === "present").length;
-      setAttendanceToday({
-        pct: todays.length ? Math.round((presentToday / todays.length) * 100) : 0,
-        present: presentToday, total: todays.length,
-      });
-      const byDay: Record<string, { p: number; n: number }> = {};
-      for (let i = 0; i < 14; i++) {
-        const d = new Date(); d.setDate(d.getDate() - (13 - i));
-        byDay[d.toISOString().slice(0, 10)] = { p: 0, n: 0 };
-      }
-      for (const row of attRows) {
-        const k = row.date;
-        if (!byDay[k]) continue;
-        byDay[k].n += 1;
-        if (row.status === "present") byDay[k].p += 1;
-      }
-      setAttendanceTrend(Object.entries(byDay).map(([d, v]) => ({
-        day: new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" }),
-        pct: v.n ? Math.round((v.p / v.n) * 100) : 0,
-      })));
-
-      // fees: this month + 6-month trend
-      const feeRows = (fee.data ?? []) as { amount_paid: number; paid_at: string }[];
-      const monthly: Record<string, number> = {};
-      for (let i = 5; i >= 0; i--) {
-        const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
-        monthly[d.toISOString().slice(0, 7)] = 0;
-      }
-      let thisMonth = 0;
-      const thisKey = new Date().toISOString().slice(0, 7);
-      for (const f of feeRows) {
-        const k = f.paid_at?.slice(0, 7);
-        if (k && k in monthly) monthly[k] += Number(f.amount_paid) || 0;
-        if (k === thisKey) thisMonth += Number(f.amount_paid) || 0;
-      }
-      setFeesThisMonth(thisMonth);
-      setFeeTrend(Object.entries(monthly).map(([m, amount]) => ({
-        month: new Date(m + "-01").toLocaleDateString(undefined, { month: "short" }),
-        amount,
-      })));
-
-      setLoading(false);
-    })();
-    return () => { cancel = true; };
-  }, []);
-
-  const empty = !loading && counts.students === 0 && counts.teachers === 0 && counts.classes === 0;
   const money = (n: number) => new Intl.NumberFormat(undefined, { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
+
+  if (isLoading || !data) {
+    return (
+      <>
+        <PageHeader title={`Welcome back, ${name}`} description="Live snapshot of your school — updates as you add data." />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          {Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {Array.from({ length: 4 }).map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <ChartSkeleton /><ChartSkeleton />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <ListSkeleton /><ListSkeleton />
+        </div>
+      </>
+    );
+  }
+
+  const { counts, recentStudents, recentTeachers, announcements, attendanceToday, attendanceTrend, feesThisMonth, feeTrend, upcomingExams } = data;
+  const empty = counts.students === 0 && counts.teachers === 0 && counts.classes === 0;
 
   return (
     <>
