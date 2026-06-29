@@ -1,6 +1,5 @@
 // Shared panels used by both Student and Parent dashboards.
-// Takes a studentId and renders read-only summaries.
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, ClipboardList, BookOpen, UserCheck, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,16 +18,20 @@ function Card({ icon: Icon, title, children }: { icon: any; title: string; child
 }
 
 export function AttendancePanel({ studentId }: { studentId: string }) {
-  const [stats, setStats] = useState<{ present: number; absent: number; total: number } | null>(null);
-  useEffect(() => {
-    if (!studentId) return;
-    supabase.from("attendance").select("status").eq("student_id", studentId).then(({ data }) => {
+  const { data: stats } = useQuery({
+    queryKey: ["student-attendance", studentId],
+    enabled: !!studentId,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from("attendance").select("status").eq("student_id", studentId);
       const rows = data ?? [];
-      const present = rows.filter((r: any) => r.status === "present").length;
-      const absent = rows.filter((r: any) => r.status === "absent").length;
-      setStats({ present, absent, total: rows.length });
-    });
-  }, [studentId]);
+      return {
+        present: rows.filter((r: any) => r.status === "present").length,
+        absent: rows.filter((r: any) => r.status === "absent").length,
+        total: rows.length,
+      };
+    },
+  });
   return (
     <Card icon={UserCheck} title="Attendance">
       {!stats ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : stats.total === 0 ? (
@@ -45,14 +48,17 @@ export function AttendancePanel({ studentId }: { studentId: string }) {
 }
 
 export function ResultsPanel({ studentId }: { studentId: string }) {
-  const [rows, setRows] = useState<any[] | null>(null);
-  useEffect(() => {
-    if (!studentId) return;
-    supabase.from("exam_results")
-      .select("marks,max_marks,subjects(name),exams(name)")
-      .eq("student_id", studentId).order("created_at", { ascending: false }).limit(8)
-      .then(({ data }) => setRows(data ?? []));
-  }, [studentId]);
+  const { data: rows } = useQuery({
+    queryKey: ["student-results", studentId],
+    enabled: !!studentId,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from("exam_results")
+        .select("marks,max_marks,subjects(name),exams(name)")
+        .eq("student_id", studentId).order("created_at", { ascending: false }).limit(8);
+      return data ?? [];
+    },
+  });
   return (
     <Card icon={ClipboardList} title="Recent results">
       {!rows ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : rows.length === 0 ? (
@@ -74,8 +80,7 @@ export function ResultsPanel({ studentId }: { studentId: string }) {
   );
 }
 
-export function HomeworkPanel({ studentId }: { studentId: string }) {
-  // Homework module not yet wired; render placeholder so the panel slot is consistent.
+export function HomeworkPanel({ studentId: _studentId }: { studentId: string }) {
   return (
     <Card icon={BookOpen} title="Homework">
       <div className="text-sm text-muted-foreground">Homework module ships in the next phase.</div>
@@ -84,20 +89,21 @@ export function HomeworkPanel({ studentId }: { studentId: string }) {
 }
 
 export function TimetablePanel({ studentId }: { studentId: string }) {
-  const [rows, setRows] = useState<any[] | null>(null);
-  useEffect(() => {
-    if (!studentId) return;
-    (async () => {
+  const { data: rows } = useQuery({
+    queryKey: ["student-timetable", studentId],
+    enabled: !!studentId,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
       const { data: st } = await supabase.from("students").select("class_id,section_id").eq("id", studentId).single();
-      if (!st?.class_id) { setRows([]); return; }
+      if (!st?.class_id) return [];
       let q = supabase.from("timetable")
         .select("day_of_week,start_time,end_time,subjects(name),teachers(full_name)")
         .eq("class_id", st.class_id);
       if (st.section_id) q = q.eq("section_id", st.section_id);
       const { data } = await q.order("day_of_week").order("start_time");
-      setRows(data ?? []);
-    })();
-  }, [studentId]);
+      return data ?? [];
+    },
+  });
   return (
     <Card icon={CalendarDays} title="Timetable">
       {!rows ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : rows.length === 0 ? (
