@@ -88,10 +88,10 @@ export function ChatBot() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label="Open Scholaris AI chat"
-        className="fixed left-5 bottom-5 z-50 h-14 w-14 rounded-2xl shadow-lg flex items-center justify-center text-primary-foreground transition-transform hover:scale-105 active:scale-95"
+        className="fixed left-4 bottom-4 z-50 h-11 w-11 rounded-xl shadow-lg flex items-center justify-center text-primary-foreground transition-transform hover:scale-105 active:scale-95"
         style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-elegant, 0 10px 30px -10px rgba(0,0,0,.4))" }}
       >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
       </button>
 
       {open && (
