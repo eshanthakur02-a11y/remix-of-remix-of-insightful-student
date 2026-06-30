@@ -84,7 +84,7 @@ function Page() {
       if (error) return toast.error(error.message);
       toast.success("Updated");
     } else {
-      const { error } = await supabase.from("homework").insert({ ...payload, school_id: prof!.school_id, created_by: me.user!.id });
+      const { error } = await supabase.from("homework").insert({ ...payload, school_id: prof!.school_id!, created_by: me.user!.id });
       if (error) return toast.error(error.message);
       toast.success("Created");
     }

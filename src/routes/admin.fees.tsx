@@ -62,7 +62,7 @@ function Structures() {
     const { data: me } = await supabase.auth.getUser();
     const { data: prof } = await supabase.from("profiles").select("school_id").eq("id", me.user!.id).single();
     const { error } = await supabase.from("fee_structures").insert({
-      school_id: prof!.school_id, name: form.name, amount: Number(form.amount), frequency: form.frequency,
+      school_id: prof!.school_id!, name: form.name, amount: Number(form.amount), frequency: form.frequency,
       class_id: form.class_id || null, due_day: form.due_day ? Number(form.due_day) : null,
     });
     if (error) return toast.error(error.message);
@@ -276,7 +276,7 @@ function NamedAmountList({ title, table, valueLabel, valueKey = "value", extraFi
     e.preventDefault();
     const { data: me } = await supabase.auth.getUser();
     const { data: prof } = await supabase.from("profiles").select("school_id").eq("id", me.user!.id).single();
-    const payload: any = { school_id: prof!.school_id, name: form.name, [valueKey]: Number(form[valueKey]) };
+    const payload: any = { school_id: prof!.school_id!, name: form.name, [valueKey]: Number(form[valueKey]) };
     if (extraField && kindOptions) payload[extraField] = form[extraField];
     if (graceField && extraField) payload[extraField] = Number(form[extraField]);
     const { error } = await supabase.from(table as never).insert(payload);

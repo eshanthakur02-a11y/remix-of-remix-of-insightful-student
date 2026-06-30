@@ -48,7 +48,7 @@ function Page() {
     const { data: prof } = await supabase.from("profiles").select("school_id").eq("id", me.user!.id).single();
     const payload = {
       name: form.name, exam_date: form.exam_date || null, class_id: form.class_id || null,
-      exam_type: form.exam_type, description: form.description || null, school_id: prof!.school_id,
+      exam_type: form.exam_type, description: form.description || null, school_id: prof!.school_id!,
     };
     if (editing) {
       const { error } = await supabase.from("exams").update(payload).eq("id", editing.id);

@@ -77,7 +77,7 @@ function BooksTab() {
     const { data: me } = await supabase.auth.getUser();
     const { data: prof } = await supabase.from("profiles").select("school_id").eq("id", me.user!.id).single();
     const payload = {
-      school_id: prof!.school_id, title: form.title, isbn: form.isbn || null,
+      school_id: prof!.school_id!, title: form.title, isbn: form.isbn || null,
       category_id: form.category_id || null, author_id: form.author_id || null, publisher_id: form.publisher_id || null,
       total_copies: Number(form.total_copies), available_copies: Number(form.total_copies),
     };
