@@ -1,50 +1,77 @@
-# Phase X — Performance & SPA Experience
 
-No new ERP features. Goal: make Scholaris feel like Linear/Notion — instant nav, cached data, skeletons everywhere, no full reloads.
+# Phase 1 Final Completion Plan
 
-Delivered in 3 waves so each is verifiable before the next.
+Goal: every menu item in every role opens a working page backed by real Supabase data, with CRUD, RLS, filters, pagination, loading/empty/error states, and notifications. No mock data, no "Coming Soon".
 
----
+I will ship this in 6 waves. Each wave ends with a verification pass (lint + route smoke test + RLS check) before the next begins. You approve at the end of each wave.
 
-## Wave A — SPA shell + Query foundation
+## Current state (already shipped)
 
-The biggest perceived-speed wins. Everything else builds on this.
+- 37 demo accounts, 5 role layouts with persistent shell, TanStack Query caching, optimistic CRUD.
+- Tables exist for: schools, profiles, user_roles, classes, sections, subjects, students, teachers, parents, parent_students, teacher_assignments, teacher_subjects, attendance, exams, exam_results, exam_grades, fees, fee_payments, homework, homework_submissions, books, book_loans, book_categories, book_authors, book_publishers, timetable, transport_routes, student_transport, messages, announcements, notifications, audit_logs, academic_sessions.
+- Working: admin dashboard, students, teachers, classes, sections, subjects, homework, announcements, library skeleton, attendance entry, timetable, exams shell, student/parent portals.
 
-1. **Persistent shell.** Refactor so `Sidebar`, `Header`, `NotificationBell`, `ChatBot` mount **once** at a role-layout level (`admin.tsx`, `teacher.tsx`, `student.tsx`, `parent.tsx`, `accountant.tsx`, `transport.tsx`, `superadmin.tsx`) — child routes only swap the `<Outlet />` content. Today each page re-renders `RoleShell` from scratch on every nav, which is the main cause of the "reload" feel.
-2. **TanStack Query everywhere.** Wire `QueryClient` into router context (per-request in `getRouter`, `defaultPreloadStaleTime: 0`). Convert all `useEffect + supabase.from(...)` reads to `queryOptions` + `useSuspenseQuery` with the loader pattern. Sensible defaults: `staleTime: 60_000`, `gcTime: 5min`, `retry: 1`.
-3. **Route prefetching.** `defaultPreload: "intent"` on the router + `preload="intent"` on sidebar `<Link>`s. Prefetches both JS chunk and loader data on hover.
-4. **Skeletons.** Add `pendingComponent` with `TableSkeleton` / card skeletons on every route that fetches. Standard loading/empty/error/success states using existing `EmptyState` + `ErrorState`.
+## Gaps to close (this phase)
 
-## Wave B — Data layer & dashboards
+Database additions needed:
+- `vehicles`, `drivers`, `route_stops` (transport completion)
+- `fee_structures`, `fee_invoices`, `fee_discounts`, `fee_fines` (accountant completion)
+- `feature_flags` per school (already on `schools.features` jsonb — wire UI)
+- `subscriptions` table (super admin)
+- `book_fines` view
+- triggers to emit notifications on key events
 
-5. **Dashboard progressive render.** Admin/Teacher/Student dashboards: KPI cards first (small queries), charts second (streamed via `prefetchQuery`, no await), tables/widgets third. Parallel `Promise.all` for independent queries.
-6. **Server-side pagination** on heavy tables: students, teachers, parents, attendance, homework, exams, fees, notifications, audit logs, messages. Standard `range()` + `count: 'exact', head: true` pattern; cursor or page number in URL search params.
-7. **Column trimming.** Audit every `.select()` — replace `*` with explicit column lists. Add DB indexes for hot filters: `attendance(school_id, date)`, `homework(class_id, due_date)`, `audit_logs(school_id, created_at desc)`, `notifications(user_id, read_at)`, `messages(thread_id, created_at)`.
-8. **Optimistic updates** for the high-frequency actions: attendance toggle, homework submit, message send, announcement post, mark-notification-read. Rollback on error via Query's `onMutate`/`onError`.
+## Wave breakdown
 
-## Wave C — Bundle + polish
+### Wave 1 — Schema completion + Storage policies
+- Migrations: vehicles, drivers, route_stops, fee_structures, fee_invoices, fee_discounts, fee_fines, subscriptions.
+- Storage RLS for 6 buckets (avatars, documents, assignments, report-cards, fee-receipts, school-logos).
+- Notification trigger functions (attendance marked, homework assigned, marks published, fee due, announcement posted).
+- File upload helper `src/lib/storage.ts`.
 
-9. **Lazy-load heavy routes.** Reports, Library, Transport, Insights, Analytics charts → `.lazy.tsx` split. Keep dashboards critical.
-10. **Virtual scrolling** (`@tanstack/react-virtual`) for students, attendance roster, audit logs, notifications when row count > 100.
-11. **Bundle audit.** Tree-shake lucide imports already individual ✓; check Recharts (heavy) — lazy-load chart components, swap any unused deps. Run `vite build` and report before/after gzipped size.
-12. **Memoization.** Targeted `React.memo` on `DataTable` row, `StatCard`, chart components. `useMemo` for derived chart data. No blanket wrapping.
-13. **Perf report.** Measure with Playwright + Chrome perf: initial load, dashboard TTI, nav time, bundle size. Before/after table + remaining bottlenecks.
+### Wave 2 — Super Admin completion
+- `superadmin.schools`: full CRUD + suspend/activate + feature flags editor + search.
+- `superadmin.admins`: invite, reset pw, suspend, delete.
+- `superadmin.subscriptions`: plans, expiry, renewal.
+- `superadmin.audit`: full activity log with filters.
+- `superadmin.settings`: platform config.
+- Dashboard: real schools/users/growth KPIs + charts.
 
----
+### Wave 3 — School Admin completion (largest)
+- Finish: teacher assignments UI, exams (create/schedule/publish), marks entry, results publishing with grade/percentage/rank, fees (structure → invoices → collection → receipts), library (issue/return/fine), reports center (PDF + Excel via window.print + xlsx), academic sessions switcher, announcements targeting, notifications center.
+- Wire bulk actions, pagination, advanced filters across all admin tables.
 
-## Technical notes
+### Wave 4 — Teacher + Student + Parent completion
+- Teacher: my classes, my subjects, marks entry, results view, student profiles drill-down, messages, reports, profile editor.
+- Student: attendance, homework, results, subjects, timetable, library (my loans), fees (my invoices), transport (my route), announcements, notifications, profile.
+- Parent: child selector, per-child mirrors of student views, messages.
 
-- Per-request `QueryClient` in `getRouter` is required for SSR safety (current `src/router.tsx` uses a module-level client — fix in Wave A).
-- `RoleShell` is currently rendered inside each page (`admin.index.tsx`, `admin.teachers.tsx`, etc.). Migrating it to layout routes is mechanical but touches ~60 route files — done with codemod-style edits.
-- Existing `.lazy.tsx` splitting is not used anywhere yet; introducing it is pure win for non-critical pages.
-- DB index additions ship as one migration at the end of Wave B.
+### Wave 5 — Accountant + Transport completion
+- Accountant: fee structure designer, invoice generation, receipts (printable), collections, pending, discounts, fines, analytics charts.
+- Transport: vehicles CRUD, drivers CRUD, routes with stops, student assignment, route map (static OSM tile w/ markers — no paid API), reports.
 
-## Out of scope
+### Wave 6 — Hardening + Audit Report
+- Lint pass, RLS verification script, route smoke test (all menu items), notification trigger test, mobile responsive sweep, empty-state pass on every list.
+- Deliverable: ERP audit report (completed modules, remaining issues, perf notes, security notes, production-readiness score, AI-readiness score).
 
-- New modules, UI redesigns, new ERP features.
-- Auth changes, RLS changes.
-- Realtime additions (only remove/scope down if duplicating Query).
+## Technical details
 
----
+- All new tables follow the GRANT → RLS → POLICY structure; `service_role` always granted, `anon` only for fully public reads (none in this phase).
+- RLS pattern: `school_id = auth_school_id()` for school-scoped tables; `is_super_admin(auth.uid())` bypass; role-specific writes via `has_role()`.
+- Notifications via `create_notification()` from new AFTER INSERT/UPDATE triggers — no client-side fan-out.
+- Reports: PDF via `window.print()` with print-stylesheet (no jspdf bloat); Excel via `xlsx` (already small, lazy-loaded).
+- File uploads: signed URLs for private buckets; per-bucket RLS policies scoping by `school_id` folder prefix.
+- No new third-party integrations (no n8n, no Stripe, no Twilio, no AI) — explicitly out of scope.
 
-Reply **"go A"** to start with the shell + Query foundation, or **"go all"** to ship A → B → C sequentially with checkpoints between waves.
+## Risk callouts
+
+- Schema migrations require approval per call — Wave 1 alone is ~8 migrations.
+- Fee/exam workflows touch many existing routes; expect Wave 3 to span multiple turns.
+- I will NOT mark a wave complete until its smoke test passes; partial waves will be paused and reported, not papered over.
+
+## What I need from you
+
+Reply with one of:
+1. **"go"** — I start Wave 1 immediately (schema + storage).
+2. **"reorder X first"** — bump a wave up if you want a specific dashboard done first.
+3. **"skip X"** — drop a wave (e.g. if subscriptions aren't needed yet).
