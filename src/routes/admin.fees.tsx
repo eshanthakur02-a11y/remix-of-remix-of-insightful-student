@@ -76,7 +76,7 @@ function Structures() {
   }
   async function generate() {
     if (!genFor) return;
-    const { data, error } = await supabase.rpc("generate_invoices_for_structure", { _structure_id: genFor.id, _due_date: dueDate || null });
+    const { data, error } = await supabase.rpc("generate_invoices_for_structure", { _structure_id: genFor.id, _due_date: dueDate || undefined });
     if (error) return toast.error(error.message);
     toast.success(`Generated ${data} invoices`); setGenFor(null); setDueDate("");
   }
