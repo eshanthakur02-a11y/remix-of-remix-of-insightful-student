@@ -34,7 +34,10 @@ import { Route as StudentIndexRouteImport } from './routes/student.index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccountantIndexRouteImport } from './routes/accountant.index'
+import { Route as TransportVehiclesRouteImport } from './routes/transport.vehicles'
 import { Route as TransportRoutesRouteImport } from './routes/transport.routes'
+import { Route as TransportReportsRouteImport } from './routes/transport.reports'
+import { Route as TransportDriversRouteImport } from './routes/transport.drivers'
 import { Route as TransportAssignmentsRouteImport } from './routes/transport.assignments'
 import { Route as TeacherTimetableRouteImport } from './routes/teacher.timetable'
 import { Route as TeacherResultsRouteImport } from './routes/teacher.results'
@@ -80,6 +83,7 @@ import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AccountantReportsRouteImport } from './routes/accountant.reports'
 import { Route as AccountantPaymentsRouteImport } from './routes/accountant.payments'
+import { Route as AccountantInvoicesRouteImport } from './routes/accountant.invoices'
 import { Route as AccountantFeesRouteImport } from './routes/accountant.fees'
 import { Route as TeacherHomeworkIdRouteImport } from './routes/teacher.homework.$id'
 import { Route as AdminExamsIdRouteImport } from './routes/admin.exams.$id'
@@ -209,9 +213,24 @@ const AccountantIndexRoute = AccountantIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AccountantRoute,
 } as any)
+const TransportVehiclesRoute = TransportVehiclesRouteImport.update({
+  id: '/vehicles',
+  path: '/vehicles',
+  getParentRoute: () => TransportRoute,
+} as any)
 const TransportRoutesRoute = TransportRoutesRouteImport.update({
   id: '/routes',
   path: '/routes',
+  getParentRoute: () => TransportRoute,
+} as any)
+const TransportReportsRoute = TransportReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => TransportRoute,
+} as any)
+const TransportDriversRoute = TransportDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
   getParentRoute: () => TransportRoute,
 } as any)
 const TransportAssignmentsRoute = TransportAssignmentsRouteImport.update({
@@ -439,6 +458,11 @@ const AccountantPaymentsRoute = AccountantPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AccountantRoute,
 } as any)
+const AccountantInvoicesRoute = AccountantInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AccountantRoute,
+} as any)
 const AccountantFeesRoute = AccountantFeesRouteImport.update({
   id: '/fees',
   path: '/fees',
@@ -475,6 +499,7 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/transport': typeof TransportRouteWithChildren
   '/accountant/fees': typeof AccountantFeesRoute
+  '/accountant/invoices': typeof AccountantInvoicesRoute
   '/accountant/payments': typeof AccountantPaymentsRoute
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -520,7 +545,10 @@ export interface FileRoutesByFullPath {
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
+  '/transport/drivers': typeof TransportDriversRoute
+  '/transport/reports': typeof TransportReportsRoute
   '/transport/routes': typeof TransportRoutesRoute
+  '/transport/vehicles': typeof TransportVehiclesRoute
   '/accountant/': typeof AccountantIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/parent/': typeof ParentIndexRoute
@@ -544,6 +572,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/students': typeof StudentsRouteWithChildren
   '/accountant/fees': typeof AccountantFeesRoute
+  '/accountant/invoices': typeof AccountantInvoicesRoute
   '/accountant/payments': typeof AccountantPaymentsRoute
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -589,7 +618,10 @@ export interface FileRoutesByTo {
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
+  '/transport/drivers': typeof TransportDriversRoute
+  '/transport/reports': typeof TransportReportsRoute
   '/transport/routes': typeof TransportRoutesRoute
+  '/transport/vehicles': typeof TransportVehiclesRoute
   '/accountant': typeof AccountantIndexRoute
   '/admin': typeof AdminIndexRoute
   '/parent': typeof ParentIndexRoute
@@ -621,6 +653,7 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/transport': typeof TransportRouteWithChildren
   '/accountant/fees': typeof AccountantFeesRoute
+  '/accountant/invoices': typeof AccountantInvoicesRoute
   '/accountant/payments': typeof AccountantPaymentsRoute
   '/accountant/reports': typeof AccountantReportsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -666,7 +699,10 @@ export interface FileRoutesById {
   '/teacher/results': typeof TeacherResultsRoute
   '/teacher/timetable': typeof TeacherTimetableRoute
   '/transport/assignments': typeof TransportAssignmentsRoute
+  '/transport/drivers': typeof TransportDriversRoute
+  '/transport/reports': typeof TransportReportsRoute
   '/transport/routes': typeof TransportRoutesRoute
+  '/transport/vehicles': typeof TransportVehiclesRoute
   '/accountant/': typeof AccountantIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/parent/': typeof ParentIndexRoute
@@ -699,6 +735,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/transport'
     | '/accountant/fees'
+    | '/accountant/invoices'
     | '/accountant/payments'
     | '/accountant/reports'
     | '/admin/announcements'
@@ -744,7 +781,10 @@ export interface FileRouteTypes {
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
+    | '/transport/drivers'
+    | '/transport/reports'
     | '/transport/routes'
+    | '/transport/vehicles'
     | '/accountant/'
     | '/admin/'
     | '/parent/'
@@ -768,6 +808,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/students'
     | '/accountant/fees'
+    | '/accountant/invoices'
     | '/accountant/payments'
     | '/accountant/reports'
     | '/admin/announcements'
@@ -813,7 +854,10 @@ export interface FileRouteTypes {
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
+    | '/transport/drivers'
+    | '/transport/reports'
     | '/transport/routes'
+    | '/transport/vehicles'
     | '/accountant'
     | '/admin'
     | '/parent'
@@ -844,6 +888,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/transport'
     | '/accountant/fees'
+    | '/accountant/invoices'
     | '/accountant/payments'
     | '/accountant/reports'
     | '/admin/announcements'
@@ -889,7 +934,10 @@ export interface FileRouteTypes {
     | '/teacher/results'
     | '/teacher/timetable'
     | '/transport/assignments'
+    | '/transport/drivers'
+    | '/transport/reports'
     | '/transport/routes'
+    | '/transport/vehicles'
     | '/accountant/'
     | '/admin/'
     | '/parent/'
@@ -1102,11 +1150,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountantIndexRouteImport
       parentRoute: typeof AccountantRoute
     }
+    '/transport/vehicles': {
+      id: '/transport/vehicles'
+      path: '/vehicles'
+      fullPath: '/transport/vehicles'
+      preLoaderRoute: typeof TransportVehiclesRouteImport
+      parentRoute: typeof TransportRoute
+    }
     '/transport/routes': {
       id: '/transport/routes'
       path: '/routes'
       fullPath: '/transport/routes'
       preLoaderRoute: typeof TransportRoutesRouteImport
+      parentRoute: typeof TransportRoute
+    }
+    '/transport/reports': {
+      id: '/transport/reports'
+      path: '/reports'
+      fullPath: '/transport/reports'
+      preLoaderRoute: typeof TransportReportsRouteImport
+      parentRoute: typeof TransportRoute
+    }
+    '/transport/drivers': {
+      id: '/transport/drivers'
+      path: '/drivers'
+      fullPath: '/transport/drivers'
+      preLoaderRoute: typeof TransportDriversRouteImport
       parentRoute: typeof TransportRoute
     }
     '/transport/assignments': {
@@ -1424,6 +1493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountantPaymentsRouteImport
       parentRoute: typeof AccountantRoute
     }
+    '/accountant/invoices': {
+      id: '/accountant/invoices'
+      path: '/invoices'
+      fullPath: '/accountant/invoices'
+      preLoaderRoute: typeof AccountantInvoicesRouteImport
+      parentRoute: typeof AccountantRoute
+    }
     '/accountant/fees': {
       id: '/accountant/fees'
       path: '/fees'
@@ -1450,6 +1526,7 @@ declare module '@tanstack/react-router' {
 
 interface AccountantRouteChildren {
   AccountantFeesRoute: typeof AccountantFeesRoute
+  AccountantInvoicesRoute: typeof AccountantInvoicesRoute
   AccountantPaymentsRoute: typeof AccountantPaymentsRoute
   AccountantReportsRoute: typeof AccountantReportsRoute
   AccountantIndexRoute: typeof AccountantIndexRoute
@@ -1457,6 +1534,7 @@ interface AccountantRouteChildren {
 
 const AccountantRouteChildren: AccountantRouteChildren = {
   AccountantFeesRoute: AccountantFeesRoute,
+  AccountantInvoicesRoute: AccountantInvoicesRoute,
   AccountantPaymentsRoute: AccountantPaymentsRoute,
   AccountantReportsRoute: AccountantReportsRoute,
   AccountantIndexRoute: AccountantIndexRoute,
@@ -1635,13 +1713,19 @@ const TeacherRouteWithChildren =
 
 interface TransportRouteChildren {
   TransportAssignmentsRoute: typeof TransportAssignmentsRoute
+  TransportDriversRoute: typeof TransportDriversRoute
+  TransportReportsRoute: typeof TransportReportsRoute
   TransportRoutesRoute: typeof TransportRoutesRoute
+  TransportVehiclesRoute: typeof TransportVehiclesRoute
   TransportIndexRoute: typeof TransportIndexRoute
 }
 
 const TransportRouteChildren: TransportRouteChildren = {
   TransportAssignmentsRoute: TransportAssignmentsRoute,
+  TransportDriversRoute: TransportDriversRoute,
+  TransportReportsRoute: TransportReportsRoute,
   TransportRoutesRoute: TransportRoutesRoute,
+  TransportVehiclesRoute: TransportVehiclesRoute,
   TransportIndexRoute: TransportIndexRoute,
 }
 
@@ -1675,13 +1759,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
