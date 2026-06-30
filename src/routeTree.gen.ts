@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransportRouteImport } from './routes/transport'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as SuperadminRouteImport } from './routes/superadmin'
-import { Route as StudentsRouteImport } from './routes/students'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -21,7 +20,6 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as NoRoleRouteImport } from './routes/no-role'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountantRouteImport } from './routes/accountant'
@@ -49,7 +47,6 @@ import { Route as SuperadminSettingsRouteImport } from './routes/superadmin.sett
 import { Route as SuperadminSchoolsRouteImport } from './routes/superadmin.schools'
 import { Route as SuperadminAuditRouteImport } from './routes/superadmin.audit'
 import { Route as SuperadminAdminsRouteImport } from './routes/superadmin.admins'
-import { Route as StudentsRegNoRouteImport } from './routes/students.$regNo'
 import { Route as StudentTransportRouteImport } from './routes/student.transport'
 import { Route as StudentTimetableRouteImport } from './routes/student.timetable'
 import { Route as StudentResultsRouteImport } from './routes/student.results'
@@ -103,11 +100,6 @@ const SuperadminRoute = SuperadminRouteImport.update({
   path: '/superadmin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentsRoute = StudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
@@ -146,11 +138,6 @@ const MessagesRoute = MessagesRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InsightsRoute = InsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -287,11 +274,6 @@ const SuperadminAdminsRoute = SuperadminAdminsRouteImport.update({
   id: '/admins',
   path: '/admins',
   getParentRoute: () => SuperadminRoute,
-} as any)
-const StudentsRegNoRoute = StudentsRegNoRouteImport.update({
-  id: '/$regNo',
-  path: '/$regNo',
-  getParentRoute: () => StudentsRoute,
 } as any)
 const StudentTransportRoute = StudentTransportRouteImport.update({
   id: '/transport',
@@ -485,7 +467,6 @@ export interface FileRoutesByFullPath {
   '/accountant': typeof AccountantRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
-  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/no-role': typeof NoRoleRoute
@@ -494,7 +475,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
-  '/students': typeof StudentsRouteWithChildren
   '/superadmin': typeof SuperadminRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/transport': typeof TransportRouteWithChildren
@@ -533,7 +513,6 @@ export interface FileRoutesByFullPath {
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
-  '/students/$regNo': typeof StudentsRegNoRoute
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/audit': typeof SuperadminAuditRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
@@ -563,14 +542,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/access-denied': typeof AccessDeniedRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/no-role': typeof NoRoleRoute
   '/notifications': typeof NotificationsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/students': typeof StudentsRouteWithChildren
   '/accountant/fees': typeof AccountantFeesRoute
   '/accountant/invoices': typeof AccountantInvoicesRoute
   '/accountant/payments': typeof AccountantPaymentsRoute
@@ -606,7 +583,6 @@ export interface FileRoutesByTo {
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
-  '/students/$regNo': typeof StudentsRegNoRoute
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/audit': typeof SuperadminAuditRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
@@ -639,7 +615,6 @@ export interface FileRoutesById {
   '/accountant': typeof AccountantRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
-  '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/no-role': typeof NoRoleRoute
@@ -648,7 +623,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
-  '/students': typeof StudentsRouteWithChildren
   '/superadmin': typeof SuperadminRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/transport': typeof TransportRouteWithChildren
@@ -687,7 +661,6 @@ export interface FileRoutesById {
   '/student/results': typeof StudentResultsRoute
   '/student/timetable': typeof StudentTimetableRoute
   '/student/transport': typeof StudentTransportRoute
-  '/students/$regNo': typeof StudentsRegNoRoute
   '/superadmin/admins': typeof SuperadminAdminsRoute
   '/superadmin/audit': typeof SuperadminAuditRoute
   '/superadmin/schools': typeof SuperadminSchoolsRoute
@@ -721,7 +694,6 @@ export interface FileRouteTypes {
     | '/accountant'
     | '/admin'
     | '/forgot-password'
-    | '/insights'
     | '/login'
     | '/messages'
     | '/no-role'
@@ -730,7 +702,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/student'
-    | '/students'
     | '/superadmin'
     | '/teacher'
     | '/transport'
@@ -769,7 +740,6 @@ export interface FileRouteTypes {
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
-    | '/students/$regNo'
     | '/superadmin/admins'
     | '/superadmin/audit'
     | '/superadmin/schools'
@@ -799,14 +769,12 @@ export interface FileRouteTypes {
     | '/'
     | '/access-denied'
     | '/forgot-password'
-    | '/insights'
     | '/login'
     | '/messages'
     | '/no-role'
     | '/notifications'
     | '/reset-password'
     | '/signup'
-    | '/students'
     | '/accountant/fees'
     | '/accountant/invoices'
     | '/accountant/payments'
@@ -842,7 +810,6 @@ export interface FileRouteTypes {
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
-    | '/students/$regNo'
     | '/superadmin/admins'
     | '/superadmin/audit'
     | '/superadmin/schools'
@@ -874,7 +841,6 @@ export interface FileRouteTypes {
     | '/accountant'
     | '/admin'
     | '/forgot-password'
-    | '/insights'
     | '/login'
     | '/messages'
     | '/no-role'
@@ -883,7 +849,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/student'
-    | '/students'
     | '/superadmin'
     | '/teacher'
     | '/transport'
@@ -922,7 +887,6 @@ export interface FileRouteTypes {
     | '/student/results'
     | '/student/timetable'
     | '/student/transport'
-    | '/students/$regNo'
     | '/superadmin/admins'
     | '/superadmin/audit'
     | '/superadmin/schools'
@@ -955,7 +919,6 @@ export interface RootRouteChildren {
   AccountantRoute: typeof AccountantRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
   MessagesRoute: typeof MessagesRoute
   NoRoleRoute: typeof NoRoleRoute
@@ -964,7 +927,6 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   StudentRoute: typeof StudentRouteWithChildren
-  StudentsRoute: typeof StudentsRouteWithChildren
   SuperadminRoute: typeof SuperadminRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
   TransportRoute: typeof TransportRouteWithChildren
@@ -994,13 +956,6 @@ declare module '@tanstack/react-router' {
       path: '/superadmin'
       fullPath: '/superadmin'
       preLoaderRoute: typeof SuperadminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/students': {
-      id: '/students'
-      path: '/students'
-      fullPath: '/students'
-      preLoaderRoute: typeof StudentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/student': {
@@ -1057,13 +1012,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/insights': {
-      id: '/insights'
-      path: '/insights'
-      fullPath: '/insights'
-      preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1254,13 +1202,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/superadmin/admins'
       preLoaderRoute: typeof SuperadminAdminsRouteImport
       parentRoute: typeof SuperadminRoute
-    }
-    '/students/$regNo': {
-      id: '/students/$regNo'
-      path: '/$regNo'
-      fullPath: '/students/$regNo'
-      preLoaderRoute: typeof StudentsRegNoRouteImport
-      parentRoute: typeof StudentsRoute
     }
     '/student/transport': {
       id: '/student/transport'
@@ -1644,18 +1585,6 @@ const StudentRouteChildren: StudentRouteChildren = {
 const StudentRouteWithChildren =
   StudentRoute._addFileChildren(StudentRouteChildren)
 
-interface StudentsRouteChildren {
-  StudentsRegNoRoute: typeof StudentsRegNoRoute
-}
-
-const StudentsRouteChildren: StudentsRouteChildren = {
-  StudentsRegNoRoute: StudentsRegNoRoute,
-}
-
-const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
-  StudentsRouteChildren,
-)
-
 interface SuperadminRouteChildren {
   SuperadminAdminsRoute: typeof SuperadminAdminsRoute
   SuperadminAuditRoute: typeof SuperadminAuditRoute
@@ -1739,7 +1668,6 @@ const rootRouteChildren: RootRouteChildren = {
   AccountantRoute: AccountantRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
   MessagesRoute: MessagesRoute,
   NoRoleRoute: NoRoleRoute,
@@ -1748,7 +1676,6 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   StudentRoute: StudentRouteWithChildren,
-  StudentsRoute: StudentsRouteWithChildren,
   SuperadminRoute: SuperadminRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
   TransportRoute: TransportRouteWithChildren,
@@ -1759,13 +1686,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
