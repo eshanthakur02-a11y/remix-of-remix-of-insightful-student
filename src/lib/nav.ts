@@ -76,16 +76,22 @@ export const parentNav: NavItem[] = [
 ];
 
 export const accountantNav: NavItem[] = [
-  { to: "/accountant", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/accountant/fees", label: "Fee Structure", icon: Wallet },
-  { to: "/accountant/payments", label: "Payments", icon: Receipt },
-  { to: "/accountant/reports", label: "Reports", icon: FileBarChart },
-  { to: "/messages", label: "Messages", icon: MessageSquare },
+  { to: "/accountant", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/accountant/fees", label: "Fee Setup", icon: Wallet, group: "Finance" },
+  { to: "/accountant/invoices", label: "Invoices & Collection", icon: Receipt, group: "Finance" },
+  { to: "/accountant/payments", label: "Payment History", icon: Receipt, group: "Finance" },
+  { to: "/accountant/reports", label: "Reports", icon: FileBarChart, group: "Finance" },
+  { to: "/messages", label: "Messages", icon: MessageSquare, group: "Communication" },
+  { to: "/notifications", label: "Notifications", icon: Bell, group: "Communication" },
 ];
 
 export const transportNav: NavItem[] = [
-  { to: "/transport", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/transport/routes", label: "Routes", icon: Bus },
-  { to: "/transport/assignments", label: "Assignments", icon: Users },
-  { to: "/messages", label: "Messages", icon: MessageSquare },
+  { to: "/transport", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/transport/vehicles", label: "Vehicles", icon: Bus, group: "Fleet" },
+  { to: "/transport/drivers", label: "Drivers", icon: Users, group: "Fleet" },
+  { to: "/transport/routes", label: "Routes & Stops", icon: Bus, group: "Operations" },
+  { to: "/transport/assignments", label: "Assignments", icon: Users, group: "Operations" },
+  { to: "/transport/reports", label: "Reports", icon: FileBarChart, group: "Operations" },
+  { to: "/messages", label: "Messages", icon: MessageSquare, group: "Communication" },
+  { to: "/notifications", label: "Notifications", icon: Bell, group: "Communication" },
 ];
