@@ -94,7 +94,11 @@ function Page() {
             <tr><th className="px-4 py-2">Emp #</th><th className="px-4 py-2">Name</th><th className="px-4 py-2">Phone</th><th className="px-4 py-2">Qualification</th><th className="px-4 py-2 w-64"></th></tr>
           </thead>
           <tbody className="divide-y divide-border/60">
-            {teachers.map((t) => (
+            {isLoading ? (
+              <tr><td colSpan={5} className="p-0"><TableSkeleton rows={5} cols={5} /></td></tr>
+            ) : teachers.length === 0 ? (
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No teachers yet.</td></tr>
+            ) : teachers.map((t) => (
               <tr key={t.id}>
                 <td className="px-4 py-2 font-mono text-xs">{t.employee_no ?? "—"}</td>
                 <td className="px-4 py-2">{t.full_name}</td>
@@ -106,7 +110,6 @@ function Page() {
                 </td>
               </tr>
             ))}
-            {teachers.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No teachers yet.</td></tr>}
           </tbody>
         </table>
       </div>
