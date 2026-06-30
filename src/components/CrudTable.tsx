@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { TableSkeleton } from "@/components/TableSkeleton";
 
 export type Field = {
   key: string;
@@ -41,31 +43,58 @@ export function CrudTable<T extends { id: string }>({
   canCreate?: boolean;
   filter?: Record<string, unknown>;
 }) {
-  const [rows, setRows] = useState<T[]>([]);
-  const [loading, setLoading] = useState(true);
+  const qc = useQueryClient();
+  const queryKey = ["crud", table, filter ?? null, orderBy] as const;
+
+  const { data: rows = [], isLoading } = useQuery<T[]>({
+    queryKey,
+    staleTime: 30_000,
+    queryFn: async () => {
+      let b = supabase.from(table as never).select("*");
+      if (filter) for (const [k, v] of Object.entries(filter)) b = (b as any).eq(k, v);
+      const { data, error } = await (b as any).order(orderBy, { ascending: false });
+      if (error) throw new Error(error.message);
+      return (data ?? []) as T[];
+    },
+  });
+
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Record<string, unknown>>(initialForm);
-  const [saving, setSaving] = useState(false);
 
-  async function load() {
-    setLoading(true);
-    let q = (supabase.from(table as never).select("*") as unknown as { order: (c: string, o: { ascending: boolean }) => Promise<{ data: T[] | null; error: { message: string } | null }> });
-    if (filter) {
-      let b = supabase.from(table as never).select("*");
-      for (const [k, v] of Object.entries(filter)) b = (b as unknown as { eq: (k: string, v: unknown) => typeof b }).eq(k, v);
-      q = (b as unknown as typeof q);
-    }
-    const { data, error } = await q.order(orderBy, { ascending: false });
-    if (error) toast.error(error.message);
-    setRows((data ?? []) as T[]);
-    setLoading(false);
-  }
+  const createMut = useMutation({
+    mutationFn: async (payload: Record<string, unknown>) => {
+      const { error } = await (supabase.from(table as never) as any).insert(payload);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Created");
+      setForm(initialForm); setOpen(false);
+      qc.invalidateQueries({ queryKey });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
 
-  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [table, JSON.stringify(filter)]);
+  const deleteMut = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.from(table as never) as any).delete().eq("id", id);
+      if (error) throw new Error(error.message);
+    },
+    onMutate: async (id: string) => {
+      await qc.cancelQueries({ queryKey });
+      const prev = qc.getQueryData<T[]>(queryKey);
+      qc.setQueryData<T[]>(queryKey, (cur) => (cur ?? []).filter((r) => r.id !== id));
+      return { prev };
+    },
+    onError: (e: Error, _id, ctx) => {
+      if (ctx?.prev) qc.setQueryData(queryKey, ctx.prev);
+      toast.error(e.message);
+    },
+    onSuccess: () => toast.success("Deleted"),
+    onSettled: () => qc.invalidateQueries({ queryKey }),
+  });
 
-  async function handleCreate(e: React.FormEvent) {
+  function handleCreate(e: React.FormEvent) {
     e.preventDefault();
-    setSaving(true);
     const payload: Record<string, unknown> = { ...initialForm, ...form };
     for (const f of fields) {
       if (f.type === "number" && payload[f.key] !== undefined && payload[f.key] !== "") {
@@ -73,21 +102,12 @@ export function CrudTable<T extends { id: string }>({
       }
       if (payload[f.key] === "") payload[f.key] = null;
     }
-    const { error } = await (supabase.from(table as never) as unknown as { insert: (p: unknown) => Promise<{ error: { message: string } | null }> }).insert(payload);
-    setSaving(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Created");
-    setForm(initialForm);
-    setOpen(false);
-    load();
+    createMut.mutate(payload);
   }
 
-  async function handleDelete(id: string) {
+  function handleDelete(id: string) {
     if (!confirm("Delete this record?")) return;
-    const { error } = await (supabase.from(table as never) as unknown as { delete: () => { eq: (k: string, v: string) => Promise<{ error: { message: string } | null }> } }).delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Deleted");
-    load();
+    deleteMut.mutate(id);
   }
 
   return (
@@ -129,8 +149,8 @@ export function CrudTable<T extends { id: string }>({
                   </div>
                 ))}
                 <DialogFooter>
-                  <Button type="submit" disabled={saving} className="gap-2">
-                    {saving && <Loader2 className="h-4 w-4 animate-spin" />} Save
+                  <Button type="submit" disabled={createMut.isPending} className="gap-2">
+                    {createMut.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Save
                   </Button>
                 </DialogFooter>
               </form>
@@ -149,8 +169,8 @@ export function CrudTable<T extends { id: string }>({
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr><td colSpan={columns.length + 1} className="px-4 py-8 text-center text-muted-foreground">Loading…</td></tr>
+              {isLoading ? (
+                <tr><td colSpan={columns.length + 1} className="p-0"><TableSkeleton rows={5} cols={columns.length + (canDelete ? 1 : 0)} /></td></tr>
               ) : rows.length === 0 ? (
                 <tr><td colSpan={columns.length + 1} className="px-4 py-8 text-center text-muted-foreground">No records yet</td></tr>
               ) : rows.map((row) => (
