@@ -114,7 +114,7 @@ function Page() {
         </table>
       </div>
 
-      {assign && <TeacherAssignmentsDialog teacher={assign} onOpenChange={(o) => !o && setAssign(null)} />}
+      {assign && <TeacherAssignmentsDialog teacher={assign} onOpenChange={(o) => { if (!o) { setAssign(null); qc.invalidateQueries({ queryKey: ["admin-teachers"] }); } }} />}
       <CredentialsModal open={!!creds} onOpenChange={(o) => !o && setCreds(null)} creds={creds ?? []} />
     </>
   );
