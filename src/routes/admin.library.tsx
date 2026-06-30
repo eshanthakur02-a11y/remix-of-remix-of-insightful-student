@@ -312,7 +312,7 @@ function NamedList({ title, table }: { title: string; table: string }) {
     if (!name.trim()) return;
     const { data: me } = await supabase.auth.getUser();
     const { data: prof } = await supabase.from("profiles").select("school_id").eq("id", me.user!.id).single();
-    const { error } = await supabase.from(table as never).insert({ name: name.trim(), school_id: prof!.school_id } as never);
+    const { error } = await supabase.from(table as never).insert({ name: name.trim(), school_id: prof!.school_id! } as never);
     if (error) return toast.error(error.message);
     setName(""); load();
   }
