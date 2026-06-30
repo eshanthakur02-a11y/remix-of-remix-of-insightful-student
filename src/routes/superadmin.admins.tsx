@@ -114,7 +114,14 @@ function Page() {
                     <Button size="sm" variant={suspended ? "default" : "outline"} onClick={() => toggleSuspend(r)}>
                       {suspended ? <><ShieldCheck className="h-4 w-4 mr-1" />Activate</> : <><ShieldOff className="h-4 w-4 mr-1" />Suspend</>}
                     </Button>
-                    <Button size="sm" variant="ghost" onClick={() => setPendingDelete(r)}><Trash2 className="h-4 w-4" /></Button>
+                    <ConfirmDialog
+                      trigger={<Button size="sm" variant="ghost"><Trash2 className="h-4 w-4" /></Button>}
+                      title="Delete school admin?"
+                      description={`This permanently deletes ${r.full_name}. This cannot be undone.`}
+                      confirmLabel="Delete"
+                      destructive
+                      onConfirm={() => doDelete(r)}
+                    />
                   </td>
                 </tr>
               );
@@ -122,16 +129,6 @@ function Page() {
           </tbody>
         </table>
       </div>
-
-      <ConfirmDialog
-        open={!!pendingDelete}
-        onOpenChange={(v) => !v && setPendingDelete(null)}
-        title="Delete school admin?"
-        description={`This permanently deletes ${pendingDelete?.full_name}. This cannot be undone.`}
-        confirmLabel="Delete"
-        destructive
-        onConfirm={confirmDelete}
-      />
     </>
   );
 }
