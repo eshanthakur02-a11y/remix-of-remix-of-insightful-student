@@ -55,7 +55,6 @@ function Page() {
 
   const [form, setForm] = useState({ full_name: "", email: "", school_id: "" });
   const [busy, setBusy] = useState(false);
-  const [pendingDelete, setPendingDelete] = useState<Row | null>(null);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -73,11 +72,9 @@ function Page() {
     try { const res = await resetPw({ data: { user_id: r.user_id } }); navigator.clipboard?.writeText(res.tempPassword); toast.success(`Temp password copied: ${res.tempPassword}`); }
     catch (e: any) { toast.error(e?.message ?? "Failed"); }
   }
-  async function confirmDelete() {
-    if (!pendingDelete) return;
-    try { await delUser({ data: { user_id: pendingDelete.user_id } }); toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["school-admins"] }); }
+  async function doDelete(r: Row) {
+    try { await delUser({ data: { user_id: r.user_id } }); toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["school-admins"] }); }
     catch (e: any) { toast.error(e?.message ?? "Failed"); }
-    finally { setPendingDelete(null); }
   }
 
   return (
