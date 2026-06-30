@@ -10,6 +10,9 @@ export const superAdminNav: NavItem[] = [
   { to: "/superadmin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/superadmin/schools", label: "Schools", icon: Building2, group: "Tenants" },
   { to: "/superadmin/admins", label: "School Admins", icon: GraduationCap, group: "Tenants" },
+  { to: "/superadmin/subscriptions", label: "Subscriptions", icon: Wallet, group: "Tenants" },
+  { to: "/superadmin/audit", label: "Audit Logs", icon: FileText, group: "Platform" },
+  { to: "/superadmin/settings", label: "Settings", icon: Settings, group: "Platform" },
 ];
 
 export const adminNav: NavItem[] = [
