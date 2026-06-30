@@ -95,10 +95,10 @@ function Page() {
 
       <div className="flex items-end gap-3 mb-3">
         <div><Label>Filter by class</Label>
-          <Select value={classFilter} onValueChange={setClassFilter}>
+          <Select value={classFilter || "__all"} onValueChange={(v) => setClassFilter(v === "__all" ? "" : v)}>
             <SelectTrigger className="w-56"><SelectValue placeholder="All classes" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All classes</SelectItem>
+              <SelectItem value="__all">All classes</SelectItem>
               {classes.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
             </SelectContent>
           </Select>
