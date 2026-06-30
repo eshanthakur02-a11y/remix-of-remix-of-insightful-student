@@ -153,7 +153,11 @@ function Page() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
-            {students.map((s) => (
+            {isLoading ? (
+              <tr><td colSpan={6} className="p-0"><TableSkeleton rows={6} cols={6} /></td></tr>
+            ) : students.length === 0 ? (
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">No students yet.</td></tr>
+            ) : students.map((s) => (
               <tr key={s.id}>
                 <td className="px-4 py-2 font-mono text-xs">{s.admission_no}</td>
                 <td className="px-4 py-2">{s.full_name}</td>
@@ -167,7 +171,6 @@ function Page() {
                 </td>
               </tr>
             ))}
-            {students.length === 0 && <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">No students yet.</td></tr>}
           </tbody>
         </table>
       </div>
