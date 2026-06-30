@@ -32,7 +32,7 @@ function Page() {
     if (!student) return;
     const due = Number(fee.amount) - paidFor(fee.id);
     if (due <= 0) return;
-    const { error } = await supabase.from("fee_payments").insert({ fee_id: fee.id, student_id: student.id, amount_paid: due, method: "online", reference: `MOCK-${Date.now()}` });
+    const { error } = await supabase.from("fee_payments").insert({ fee_id: fee.id, student_id: student.id, amount_paid: due, method: "online", reference: `SELF-${Date.now()}` });
     if (error) toast.error(error.message); else { toast.success("Payment successful"); load(); }
   }
 

@@ -151,19 +151,3 @@ export function RoleShell({
   );
 }
 
-export function FeatureGrid({ items }: { items: { title: string; description: string; icon: LucideIcon }[] }) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {items.map(({ title, description, icon: Icon }) => (
-        <div key={title} className="glass-card p-5 hover:border-primary/40 transition-colors">
-          <div className="h-10 w-10 rounded-xl flex items-center justify-center mb-3" style={{ background: "var(--gradient-primary)" }}>
-            <Icon className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <h3 className="font-semibold mb-1">{title}</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-          <div className="mt-3 text-[10px] uppercase tracking-wide text-muted-foreground/70">Coming soon</div>
-        </div>
-      ))}
-    </div>
-  );
-}
