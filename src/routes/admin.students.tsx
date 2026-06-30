@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { KeyRound, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CredentialsModal, type Cred } from "@/components/CredentialsModal";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { createStudentWithParent, resetStudentPassword } from "@/lib/admin-users.functions";
 import { toast } from "sonner";
@@ -18,13 +20,33 @@ type Cls = { id: string; name: string; status: string };
 type Sec = { id: string; name: string; class_id: string; status: string };
 type Student = { id: string; admission_no: string; full_name: string; class_id: string | null; section_id: string | null; user_id: string | null };
 
+async function fetchStudentsPage() {
+  const [{ data: c }, { data: s }, { data: st }] = await Promise.all([
+    supabase.from("classes").select("id,name,status").eq("status", "active").order("name"),
+    supabase.from("sections").select("id,name,class_id,status").eq("status", "active").order("name"),
+    supabase.from("students").select("id,admission_no,full_name,class_id,section_id,user_id").order("admission_no"),
+  ]);
+  return {
+    classes: (c ?? []) as Cls[],
+    sections: (s ?? []) as Sec[],
+    students: (st ?? []) as Student[],
+  };
+}
+
 function Page() {
+  const qc = useQueryClient();
   const createSWP = useServerFn(createStudentWithParent);
   const resetPw = useServerFn(resetStudentPassword);
 
-  const [classes, setClasses] = useState<Cls[]>([]);
-  const [sections, setSections] = useState<Sec[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-students"],
+    queryFn: fetchStudentsPage,
+    staleTime: 60_000,
+  });
+  const classes = data?.classes ?? [];
+  const sections = data?.sections ?? [];
+  const students = data?.students ?? [];
+
   const [creds, setCreds] = useState<Cred[] | null>(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -36,17 +58,6 @@ function Page() {
   };
   const [form, setForm] = useState(emptyForm);
 
-  async function load() {
-    const [{ data: c }, { data: s }, { data: st }] = await Promise.all([
-      supabase.from("classes").select("id,name,status").eq("status", "active").order("name"),
-      supabase.from("sections").select("id,name,class_id,status").eq("status", "active").order("name"),
-      supabase.from("students").select("id,admission_no,full_name,class_id,section_id,user_id").order("admission_no"),
-    ]);
-    setClasses((c ?? []) as Cls[]);
-    setSections((s ?? []) as Sec[]);
-    setStudents((st ?? []) as Student[]);
-  }
-  useEffect(() => { load(); }, []);
 
   // Cascading sections
   const filteredSections = useMemo(
