@@ -17,7 +17,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/superadmin/admins")({ component: Page });
 
-type Row = { id: string; user_id: string; school_id: string; full_name: string; school_name: string; status: string };
+type Row = { id: string; user_id: string; school_id: string | null; full_name: string; school_name: string; status: string };
 
 function Page() {
   const qc = useQueryClient();
