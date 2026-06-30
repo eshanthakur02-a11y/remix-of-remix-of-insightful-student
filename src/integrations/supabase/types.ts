@@ -102,6 +102,9 @@ export type Database = {
           date: string
           id: string
           marked_by: string | null
+          notes: string | null
+          school_id: string | null
+          section_id: string | null
           status: string
           student_id: string
         }
@@ -110,6 +113,9 @@ export type Database = {
           date: string
           id?: string
           marked_by?: string | null
+          notes?: string | null
+          school_id?: string | null
+          section_id?: string | null
           status: string
           student_id: string
         }
@@ -118,10 +124,27 @@ export type Database = {
           date?: string
           id?: string
           marked_by?: string | null
+          notes?: string | null
+          school_id?: string | null
+          section_id?: string | null
           status?: string
           student_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "attendance_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "attendance_student_id_fkey"
             columns: ["student_id"]
@@ -2021,6 +2044,10 @@ export type Database = {
         Args: { _id: string }
         Returns: undefined
       }
+      generate_invoices_for_structure: {
+        Args: { _due_date?: string; _structure_id: string }
+        Returns: number
+      }
       get_user_school: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -2030,6 +2057,15 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      issue_book: {
+        Args: {
+          _book_id: string
+          _borrower_role: string
+          _borrower_user_id: string
+          _due_at: string
+        }
+        Returns: string
+      }
       log_audit: {
         Args: {
           _action: string
@@ -2041,15 +2077,27 @@ export type Database = {
         Returns: string
       }
       mark_all_notifications_read: { Args: never; Returns: number }
+      mark_attendance_bulk: {
+        Args: { _date: string; _entries: Json; _section_id: string }
+        Returns: number
+      }
       parent_has_student: {
         Args: { _student_id: string; _user_id: string }
         Returns: boolean
+      }
+      return_book: {
+        Args: { _fine_per_day?: number; _loan_id: string }
+        Returns: undefined
       }
       school_feature: {
         Args: { _key: string; _school_id: string }
         Returns: boolean
       }
       set_current_session: { Args: { _session_id: string }; Returns: undefined }
+      set_exam_published: {
+        Args: { _exam_id: string; _published: boolean }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role:

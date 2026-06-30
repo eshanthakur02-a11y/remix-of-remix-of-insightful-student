@@ -82,6 +82,7 @@ import { Route as AccountantReportsRouteImport } from './routes/accountant.repor
 import { Route as AccountantPaymentsRouteImport } from './routes/accountant.payments'
 import { Route as AccountantFeesRouteImport } from './routes/accountant.fees'
 import { Route as TeacherHomeworkIdRouteImport } from './routes/teacher.homework.$id'
+import { Route as AdminExamsIdRouteImport } from './routes/admin.exams.$id'
 
 const TransportRoute = TransportRouteImport.update({
   id: '/transport',
@@ -448,6 +449,11 @@ const TeacherHomeworkIdRoute = TeacherHomeworkIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => TeacherHomeworkRoute,
 } as any)
+const AdminExamsIdRoute = AdminExamsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminExamsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -476,7 +482,7 @@ export interface FileRoutesByFullPath {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
-  '/admin/exams': typeof AdminExamsRoute
+  '/admin/exams': typeof AdminExamsRouteWithChildren
   '/admin/fees': typeof AdminFeesRoute
   '/admin/homework': typeof AdminHomeworkRoute
   '/admin/library': typeof AdminLibraryRoute
@@ -522,6 +528,7 @@ export interface FileRoutesByFullPath {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/admin/exams/$id': typeof AdminExamsIdRoute
   '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesByTo {
@@ -544,7 +551,7 @@ export interface FileRoutesByTo {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
-  '/admin/exams': typeof AdminExamsRoute
+  '/admin/exams': typeof AdminExamsRouteWithChildren
   '/admin/fees': typeof AdminFeesRoute
   '/admin/homework': typeof AdminHomeworkRoute
   '/admin/library': typeof AdminLibraryRoute
@@ -590,6 +597,7 @@ export interface FileRoutesByTo {
   '/superadmin': typeof SuperadminIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/transport': typeof TransportIndexRoute
+  '/admin/exams/$id': typeof AdminExamsIdRoute
   '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRoutesById {
@@ -620,7 +628,7 @@ export interface FileRoutesById {
   '/admin/attendance': typeof AdminAttendanceRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/classes': typeof AdminClassesRoute
-  '/admin/exams': typeof AdminExamsRoute
+  '/admin/exams': typeof AdminExamsRouteWithChildren
   '/admin/fees': typeof AdminFeesRoute
   '/admin/homework': typeof AdminHomeworkRoute
   '/admin/library': typeof AdminLibraryRoute
@@ -666,6 +674,7 @@ export interface FileRoutesById {
   '/superadmin/': typeof SuperadminIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/transport/': typeof TransportIndexRoute
+  '/admin/exams/$id': typeof AdminExamsIdRoute
   '/teacher/homework/$id': typeof TeacherHomeworkIdRoute
 }
 export interface FileRouteTypes {
@@ -743,6 +752,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/admin/exams/$id'
     | '/teacher/homework/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -811,6 +821,7 @@ export interface FileRouteTypes {
     | '/superadmin'
     | '/teacher'
     | '/transport'
+    | '/admin/exams/$id'
     | '/teacher/homework/$id'
   id:
     | '__root__'
@@ -886,6 +897,7 @@ export interface FileRouteTypes {
     | '/superadmin/'
     | '/teacher/'
     | '/transport/'
+    | '/admin/exams/$id'
     | '/teacher/homework/$id'
   fileRoutesById: FileRoutesById
 }
@@ -1426,6 +1438,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherHomeworkIdRouteImport
       parentRoute: typeof TeacherHomeworkRoute
     }
+    '/admin/exams/$id': {
+      id: '/admin/exams/$id'
+      path: '/$id'
+      fullPath: '/admin/exams/$id'
+      preLoaderRoute: typeof AdminExamsIdRouteImport
+      parentRoute: typeof AdminExamsRoute
+    }
   }
 }
 
@@ -1447,13 +1466,25 @@ const AccountantRouteWithChildren = AccountantRoute._addFileChildren(
   AccountantRouteChildren,
 )
 
+interface AdminExamsRouteChildren {
+  AdminExamsIdRoute: typeof AdminExamsIdRoute
+}
+
+const AdminExamsRouteChildren: AdminExamsRouteChildren = {
+  AdminExamsIdRoute: AdminExamsIdRoute,
+}
+
+const AdminExamsRouteWithChildren = AdminExamsRoute._addFileChildren(
+  AdminExamsRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminAssignmentsRoute: typeof AdminAssignmentsRoute
   AdminAttendanceRoute: typeof AdminAttendanceRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminClassesRoute: typeof AdminClassesRoute
-  AdminExamsRoute: typeof AdminExamsRoute
+  AdminExamsRoute: typeof AdminExamsRouteWithChildren
   AdminFeesRoute: typeof AdminFeesRoute
   AdminHomeworkRoute: typeof AdminHomeworkRoute
   AdminLibraryRoute: typeof AdminLibraryRoute
@@ -1476,7 +1507,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAttendanceRoute: AdminAttendanceRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminClassesRoute: AdminClassesRoute,
-  AdminExamsRoute: AdminExamsRoute,
+  AdminExamsRoute: AdminExamsRouteWithChildren,
   AdminFeesRoute: AdminFeesRoute,
   AdminHomeworkRoute: AdminHomeworkRoute,
   AdminLibraryRoute: AdminLibraryRoute,
