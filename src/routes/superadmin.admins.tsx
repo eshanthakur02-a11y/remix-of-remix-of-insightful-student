@@ -46,10 +46,10 @@ function Page() {
       const sMap = new Map((scs ?? []).map((s: any) => [s.id, s.name]));
       return rows.map((r) => ({
         id: r.id, user_id: r.user_id, school_id: r.school_id,
-        full_name: pMap.get(r.user_id)?.full_name ?? "—",
-        school_name: sMap.get(r.school_id) ?? "—",
-        status: pMap.get(r.user_id)?.status ?? "active",
-      }));
+        full_name: (pMap.get(r.user_id) as any)?.full_name ?? "—",
+        school_name: (sMap.get(r.school_id as string) as string | undefined) ?? "—",
+        status: (pMap.get(r.user_id) as any)?.status ?? "active",
+      })) as Row[];
     },
   });
 
