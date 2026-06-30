@@ -1349,6 +1349,7 @@ export type Database = {
           email: string | null
           features: Json
           id: string
+          logo_url: string | null
           name: string
           phone: string | null
           status: string
@@ -1362,6 +1363,7 @@ export type Database = {
           email?: string | null
           features?: Json
           id?: string
+          logo_url?: string | null
           name: string
           phone?: string | null
           status?: string
@@ -1375,6 +1377,7 @@ export type Database = {
           email?: string | null
           features?: Json
           id?: string
+          logo_url?: string | null
           name?: string
           phone?: string | null
           status?: string
