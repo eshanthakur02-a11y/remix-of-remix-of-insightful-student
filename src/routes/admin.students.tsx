@@ -88,7 +88,7 @@ function Page() {
           { label: "Temporary password", value: res.studentTempPassword },
         ]);
       }
-      load();
+      qc.invalidateQueries({ queryKey: ["admin-students"] });
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to create student");
     } finally { setBusy(false); }
