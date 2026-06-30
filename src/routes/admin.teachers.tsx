@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { KeyRound, Loader2, Plus, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { createStaffUser, resetStaffPassword } from "@/lib/admin-users.functions";
 import { toast } from "sonner";
@@ -17,10 +19,20 @@ export const Route = createFileRoute("/admin/teachers")({ component: Page });
 type Teacher = { id: string; user_id: string | null; full_name: string; phone: string | null; qualification: string | null; employee_no: string | null };
 
 function Page() {
+  const qc = useQueryClient();
   const create = useServerFn(createStaffUser);
   const resetPw = useServerFn(resetStaffPassword);
 
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const { data: teachers = [], isLoading } = useQuery<Teacher[]>({
+    queryKey: ["admin-teachers"],
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("teachers").select("id,user_id,full_name,phone,qualification,employee_no").order("full_name");
+      if (error) throw new Error(error.message);
+      return (data ?? []) as Teacher[];
+    },
+  });
+
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [creds, setCreds] = useState<Cred[] | null>(null);
@@ -29,22 +41,18 @@ function Page() {
   const empty = { full_name: "", email: "", phone: "", qualification: "", employee_no: "" };
   const [form, setForm] = useState(empty);
 
-  async function load() {
-    const { data } = await supabase.from("teachers").select("id,user_id,full_name,phone,qualification,employee_no").order("full_name");
-    setTeachers((data ?? []) as Teacher[]);
-  }
-  useEffect(() => { load(); }, []);
-
   async function submit(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     try {
       await create({ data: { ...form, role: "teacher" } });
       toast.success("Invite email sent");
-      setOpen(false); setForm(empty); load();
+      setOpen(false); setForm(empty);
+      qc.invalidateQueries({ queryKey: ["admin-teachers"] });
     } catch (err: any) { toast.error(err?.message ?? "Failed"); }
     finally { setBusy(false); }
   }
+
 
   async function reset(t: Teacher) {
     if (!t.user_id) return toast.error("This teacher has no login account");
